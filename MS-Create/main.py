@@ -2,8 +2,12 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
+<<<<<<< HEAD
 from sqlalchemy import Column, Integer, String, Float, Date, Enum, Text, LargeBinary
 from sqlalchemy import BigInteger
+=======
+from sqlalchemy import Column, BigInteger, VARBINARY, Integer, String, Float, Date, Enum, Text
+>>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,8 +25,13 @@ app.add_middleware(
     allow_headers=['*']
 )
 
+<<<<<<< HEAD
 SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
 
+=======
+#SQL SERVER Configuration
+SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://usuario:contrasena@DESKTOP-T1KMRV2\SQLEXPRESS/AppPersonas?driver=ODBC+Driver+17+for+SQL+Server"
+>>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -40,6 +49,21 @@ def get_db():
         db.close()
 
 Base = declarative_base()
+<<<<<<< HEAD
+=======
+class Persona(Base):
+    __tablename__ = 'Personas'
+    nro_documento = Column(BigInteger, primary_key=True)  # Nro. Documento    
+    tipo_documento = Column(String)  # Tipo de documento
+    primer_nombre = Column(String)  # Primer Nombre
+    segundo_nombre = Column(String)  # Segundo Nombre
+    apellidos = Column(String)  # Apellidos
+    fecha_nacimiento = Column(Date)  # Fecha de Nacimiento
+    genero = Column(String)  # Género
+    correo_electronico = Column(String)  # Correo electrónico
+    celular = Column(BigInteger)  # Celular
+    foto = Column(VARBINARY)  # Foto (puede ser una URL o datos binarios de la imagen)
+>>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
 
 class Persona(Base):
     __tablename__ = 'Persona'
@@ -77,6 +101,7 @@ def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
+<<<<<<< HEAD
     
     return PersonaPydantic.from_orm(db_persona)  # Convierte y retorna como PersonaPydantic
 
@@ -84,3 +109,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8080)
  
+=======
+    return db_persona
+
+>>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e

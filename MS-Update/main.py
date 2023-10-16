@@ -2,11 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
-<<<<<<< HEAD
-from sqlalchemy import BigInteger, LargeBinary, Column, Integer, String, Float, Date, Enum, Text
-=======
-from sqlalchemy import Column, Integer, BigInteger, VARBINARY, String, Float, Date, Enum, Text
->>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
+from sqlalchemy import Column, BigInteger, VARBINARY, Integer, String, Float, Date, Enum, Text
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
@@ -23,7 +19,7 @@ app.add_middleware(
 )
 
 #SQL SERVER Configuration
-SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-T1KMRV2\SQLEXPRESS/AppPersonas?driver=ODBC+Driver+17+for+SQL+Server"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -40,24 +36,9 @@ def get_db():
 
 # Instanciación de Persona
 Base = declarative_base()
-
 class Persona(Base):
-<<<<<<< HEAD
-    __tablename__ = 'Persona'
-
-    numDocumento = Column(BigInteger, primary_key=True)  # Nro. Documento como bigint
-    tipoDocumento = Column(String)
-    primerNombre = Column(String)
-    segundoNombre = Column(String)
-    apellidos = Column(String)
-    fechaNacimiento = Column(String)
-    genero = Column(String)
-    correoElectronico = Column(String)
-    celular = Column(BigInteger)  # Celular como bigint
-    foto = Column(LargeBinary)
-=======
     __tablename__ = 'Personas'
-
+    
     nro_documento = Column(BigInteger, primary_key=True)  # Nro. Documento    
     tipo_documento = Column(String)  # Tipo de documento
     primer_nombre = Column(String)  # Primer Nombre
@@ -69,22 +50,25 @@ class Persona(Base):
     celular = Column(BigInteger)  # Celular
     foto = Column(VARBINARY)  # Foto (puede ser una URL o datos binarios de la imagen)
 
->>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
-
-@app.delete('/personas/{pk}')
-def delete(pk: int, db: Session = Depends(get_db)):
+@app.update('/')
+def update(pk: BigInteger, pn : String, sn: String, aps: String, g: String, ce: String, cel: BigInteger,
+            f: VARBINARY, db: Session = Depends(get_db)):
     # Intenta cargar la persona desde la base de datos
-    persona = db.query(Persona).filter(Persona.numDocumento == pk).first()
+    persona = db.query(Persona).filter(Persona.nro_documento == pk).first()
 
     if persona is None:
         raise HTTPException(status_code=404, detail="La persona no se encontró")
 
-    # Elimina la persona de la base de datos
-    db.delete(persona)
-    db.commit()
+    # Se actualiza toda la info
+    persona.nro_documento = pk
+    persona.tipo_documento = persona.tipo_documento
+    persona.primer_nombre = pn
+    persona.segundo_nombre = sn
+    persona.apellidos = aps
+    persona.fecha_nacimiento = persona.fecha_nacimiento
+    persona.genero = g
+    persona.correo_electronico = ce
+    persona.celular = cel
+    persona.foto = f
 
-    return {"message": "Persona eliminada correctamente"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3001)
+    return persona
