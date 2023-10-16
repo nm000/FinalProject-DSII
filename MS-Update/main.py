@@ -38,6 +38,7 @@ def get_db():
 Base = declarative_base()
 class Persona(Base):
     __tablename__ = 'Personas'
+    
     nro_documento = Column(BigInteger, primary_key=True)  # Nro. Documento    
     tipo_documento = Column(String)  # Tipo de documento
     primer_nombre = Column(String)  # Primer Nombre
