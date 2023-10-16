@@ -2,11 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
-<<<<<<< HEAD
 from sqlalchemy import BigInteger, LargeBinary, Column, Integer, String, Float, Date, Enum, Text
-=======
-from sqlalchemy import Column, Integer, BigInteger, VARBINARY, String, Float, Date, Enum, Text
->>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
@@ -42,7 +38,6 @@ def get_db():
 Base = declarative_base()
 
 class Persona(Base):
-<<<<<<< HEAD
     __tablename__ = 'Persona'
 
     numDocumento = Column(BigInteger, primary_key=True)  # Nro. Documento como bigint
@@ -55,21 +50,6 @@ class Persona(Base):
     correoElectronico = Column(String)
     celular = Column(BigInteger)  # Celular como bigint
     foto = Column(LargeBinary)
-=======
-    __tablename__ = 'Personas'
-
-    nro_documento = Column(BigInteger, primary_key=True)  # Nro. Documento    
-    tipo_documento = Column(String)  # Tipo de documento
-    primer_nombre = Column(String)  # Primer Nombre
-    segundo_nombre = Column(String)  # Segundo Nombre
-    apellidos = Column(String)  # Apellidos
-    fecha_nacimiento = Column(Date)  # Fecha de Nacimiento
-    genero = Column(String)  # Género
-    correo_electronico = Column(String)  # Correo electrónico
-    celular = Column(BigInteger)  # Celular
-    foto = Column(VARBINARY)  # Foto (puede ser una URL o datos binarios de la imagen)
-
->>>>>>> 8865ca2099436acfd9b23a3abdb129942ddf8d7e
 
 @app.delete('/personas/{pk}')
 def delete(pk: int, db: Session = Depends(get_db)):
@@ -84,7 +64,3 @@ def delete(pk: int, db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Persona eliminada correctamente"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3001)
