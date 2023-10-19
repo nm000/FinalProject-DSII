@@ -27,7 +27,8 @@ export const UpdatePerson = () => {
     // La función que maneja la solicitud GET y carga los datos en los campos de entrada
     const getPersonaData = async () => {
       try {
-                
+             
+        // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
         const response = await fetch(`http://localhost:8000/${datos}`);
 
         if (response.ok) {
