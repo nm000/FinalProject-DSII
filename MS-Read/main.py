@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from datetime import datetime
+import json
 
 app = FastAPI()
 
@@ -53,6 +54,20 @@ class Persona(Base):
     celular = Column(BigInteger)  # Celular como bigint
     foto = Column(LargeBinary)
 
+    def to_json(self):
+        return {
+            'numDocumento': self.numDocumento,
+            'tipoDocumento': self.tipoDocumento,
+            'primerNombre': self.primerNombre,
+            'segundoNombre': self.segundoNombre,
+            'apellidos': self.apellidos,
+            'fechaNacimiento': self.fechaNacimiento,
+            'genero': self.genero,
+            'correoElectronico': self.correoElectronico,
+            'celular': self.celular,
+            'foto': self.foto  # Asegúrate de manejar la conversión de bytes a una representación adecuada
+        }
+
 class CreateLog(Base):
     __tablename__ = 'Consola'
 
@@ -86,4 +101,5 @@ def read(pk: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_log)
 
-    return persona
+    print(persona)
+    return persona.to_json()

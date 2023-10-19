@@ -11,6 +11,8 @@ from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
 from datetime import datetime
+import uvicorn
+
 
 app = FastAPI()
 

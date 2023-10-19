@@ -1,31 +1,36 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-export const Base = () => {
+export const Prin = () => {
     
   const [selectedOption, setSelectedOption] = useState('');
+  const navigate = useNavigate();
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
 
-  const handleConfirmAction = () => {
+  function handleConfirmAction() {
     // Realiza la acción correspondiente en función de la opción seleccionada
     if (selectedOption === "opcion1") {
       // Lógica para "Crear personas"
-
+      navigate('/create');
       // Puedes enviar los datos al servidor, mostrar un mensaje, etc.
     } else if (selectedOption === "opcion2") {
       // Lógica para "Modificar datos personales"
+      navigate('/search');
     } else if (selectedOption === "opcion3") {
       // Lógica para "Consultar datos personales"
+      navigate('/read');
     } else if (selectedOption === "opcion4") {
       // Lógica para "Borrar personas"
+      navigate('/delete');
     } else if (selectedOption === "opcion5") {
       // Lógica para "Consultar log"
+      navigate('/log');
     }
-  };
+  }
 
   return (
     <div className=''>

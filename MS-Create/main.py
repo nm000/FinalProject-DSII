@@ -82,6 +82,7 @@ class PersonaPydantic(BaseModel):
 
     class Config:
         from_attributes = True
+        orm_mode=True
 
 @app.post('/', response_model=PersonaPydantic)
 def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
