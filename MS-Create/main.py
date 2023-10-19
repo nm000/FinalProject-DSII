@@ -11,6 +11,8 @@ from sqlalchemy.orm import sessionmaker
 
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
+from datetime import datetime
+
 app = FastAPI()
 
 # Middleware configuration
@@ -55,6 +57,16 @@ class Persona(Base):
     celular = Column(BigInteger)  # Celular como bigint
     foto = Column(LargeBinary)
 
+class CreateLog(Base):
+    __tablename__ = 'Consola'
+
+    idlog = Column(Integer, primary_key=True, autoincrement=True)
+    dateLog = Column(String)
+    accionLog = Column(String)
+    documentoPersona = Column(BigInteger)  # Nro. Documento como bigint
+    tipoDocumentoPersona = Column(String)
+    valorLog = Column(Text)
+
 # Define un modelo Pydantic que coincida con la clase SQLAlchemy Persona
 class PersonaPydantic(BaseModel):
     numDocumento: int  # Aquí aún puedes usar int ya que Pydantic no tiene bigint
@@ -71,12 +83,26 @@ class PersonaPydantic(BaseModel):
     class Config:
         from_attributes = True
 
-@app.post('/personas', response_model=PersonaPydantic)
+@app.post('/', response_model=PersonaPydantic)
 def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
     db_persona = Persona(**persona.dict())  # Crea una instancia de Persona
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
     
+    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db_log = CreateLog(
+        
+        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+        accionLog="CREAR",
+        documentoPersona= db_persona.numDocumento,
+        tipoDocumentoPersona= db_persona.tipoDocumento,  # Proporciona el valor deseado
+        valorLog=f"Se creó a la persona con id {db_persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
+    )
+
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+
     return PersonaPydantic.from_orm(db_persona)  # Convierte y retorna como PersonaPydantic
 

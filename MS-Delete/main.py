@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from datetime import datetime
+
 app = FastAPI()
 
 # Middleware configuration
@@ -51,7 +53,17 @@ class Persona(Base):
     celular = Column(BigInteger)  # Celular como bigint
     foto = Column(LargeBinary)
 
-@app.delete('/personas/{pk}')
+class CreateLog(Base):
+    __tablename__ = 'Consola'
+
+    idlog = Column(Integer, primary_key=True, autoincrement=True)
+    dateLog = Column(String)
+    accionLog = Column(String)
+    documentoPersona = Column(BigInteger)  # Nro. Documento como bigint
+    tipoDocumentoPersona = Column(String)
+    valorLog = Column(Text)
+
+@app.delete('/{pk}')
 def delete(pk: int, db: Session = Depends(get_db)):
     # Intenta cargar la persona desde la base de datos
     persona = db.query(Persona).filter(Persona.numDocumento == pk).first()
@@ -62,5 +74,19 @@ def delete(pk: int, db: Session = Depends(get_db)):
     # Elimina la persona de la base de datos
     db.delete(persona)
     db.commit()
+
+    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db_log = CreateLog(
+        
+        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+        accionLog="DELETE",
+        documentoPersona= persona.numDocumento,
+        tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
+        valorLog=f"Se eliminó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
+    )
+
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
 
     return {"message": "Persona eliminada correctamente"}

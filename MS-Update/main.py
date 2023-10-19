@@ -10,6 +10,8 @@ from sqlalchemy.orm import sessionmaker
 
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
+from datetime import datetime
+
 app = FastAPI()
 
 # Middleware configuration
@@ -70,7 +72,17 @@ class PersonaPydantic(BaseModel):
         orm_mode=True
         from_attributes = True
 
-@app.put('/personas/{nro_documento}', response_model=PersonaPydantic)
+class CreateLog(Base):
+    __tablename__ = 'Consola'
+
+    idlog = Column(Integer, primary_key=True, autoincrement=True)
+    dateLog = Column(String)
+    accionLog = Column(String)
+    documentoPersona = Column(BigInteger)  # Nro. Documento como bigint
+    tipoDocumentoPersona = Column(String)
+    valorLog = Column(Text)
+
+@app.put('/{nro_documento}', response_model=PersonaPydantic)
 def update(nro_documento: int, persona: PersonaPydantic, db: Session = Depends(get_db)):
     # Buscar la persona por su número de documento
     db_persona = db.query(Persona).filter(Persona.numDocumento == nro_documento).first()
@@ -84,5 +96,19 @@ def update(nro_documento: int, persona: PersonaPydantic, db: Session = Depends(g
 
     db.commit()
     db.refresh(db_persona)
+
+    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db_log = CreateLog(
+        
+        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+        accionLog="UPDATE",
+        documentoPersona= db_persona.numDocumento,
+        tipoDocumentoPersona= db_persona.tipoDocumento,  # Proporciona el valor deseado
+        valorLog=f"Se modificó a la persona con id {db_persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
+    )
+
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
 
     return PersonaPydantic.from_orm(db_persona)
