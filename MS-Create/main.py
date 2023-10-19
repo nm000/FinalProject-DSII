@@ -84,14 +84,18 @@ class PersonaPydantic(BaseModel):
         from_attributes = True
         orm_mode=True
 
+# Ruta para crear una nueva PERSONA
 @app.post('/', response_model=PersonaPydantic)
 def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
+    # Crear la persona
     db_persona = Persona(**persona.dict())  # Crea una instancia de Persona
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
     
     fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Crear un log del CREATE
     db_log = CreateLog(
         
         dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees

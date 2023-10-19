@@ -8,16 +8,21 @@ export const DeletePerson = () => {
 
     const submit = async e => {
 
+        // Esto va siempre
         e.preventDefault();
         
+        // Se envía la solicitud DELETE al microservicio, enviando el num. de identificación mediante la URL
         await fetch(`http://localhost:8001/${numDocumento}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
           });
           
+          // Esto lo único que hace es que retrocede uno a la página
+          // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones
           await navigate(-1);
         }          
     
+    // El HTML solo tiene el input para la ID 
     return <div className='container'>
                 <form>
                 

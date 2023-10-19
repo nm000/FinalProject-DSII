@@ -66,6 +66,7 @@ class CreateLog(Base):
 @app.delete('/{pk}')
 def delete(pk: int, db: Session = Depends(get_db)):
     # Intenta cargar la persona desde la base de datos
+    # Busca a la persona
     persona = db.query(Persona).filter(Persona.numDocumento == pk).first()
 
     if persona is None:

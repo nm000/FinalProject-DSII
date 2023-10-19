@@ -6,6 +6,7 @@ export const Prin = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const navigate = useNavigate();
 
+  // Para cambiar la opción elegida del menú de opciones
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
   };
@@ -32,6 +33,7 @@ export const Prin = () => {
     }
   }
 
+  // El HTML del menú
   return (
     <div className=''>
       <h1>Tus datos personales</h1>

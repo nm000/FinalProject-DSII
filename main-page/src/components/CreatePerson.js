@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 export const CreatePerson = () => {
 
+    // Inicializar todas las variables de la persona
     const [tipoDocumento, setTipoDocumento] = useState('');
     const [numDocumento, setnumDocumento] = useState('');
     const [primerNombre, setPrimerNombre] = useState('');
@@ -16,10 +17,13 @@ export const CreatePerson = () => {
     const [foto, setSelectedFile] = useState('');
     const navigate = useNavigate();
 
+
     async function submit(e) {
 
+    // Siempre va
     e.preventDefault();
-
+        
+    // Envío del método POST para realizar el CREATE con los datos
     await fetch('http://localhost:8002/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -37,9 +41,12 @@ export const CreatePerson = () => {
       }),
     });
 
+    // Esto lo único que hace es que retrocede uno a la página
+    // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
     await navigate(-1);
   }
     
+    // El HTML con todos los inputs de la PERSONA para crearla
     return <div className='container'>
     <form>
     <div>
