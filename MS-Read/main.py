@@ -101,5 +101,4 @@ def read(pk: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_log)
 
-    print(persona)
     return persona.to_json()
