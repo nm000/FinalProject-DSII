@@ -23,7 +23,7 @@ export const Prin = () => {
       navigate('/search');
     } else if (selectedOption === "opcion3") {
       // Lógica para "Consultar datos personales"
-      navigate('/read');
+      navigate('/select');
     } else if (selectedOption === "opcion4") {
       // Lógica para "Borrar personas"
       navigate('/delete');
