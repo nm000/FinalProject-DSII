@@ -10,6 +10,7 @@ from sqlalchemy.orm import declarative_base
 
 from datetime import datetime
 import json
+import base64
 
 app = FastAPI()
 
@@ -52,7 +53,7 @@ class Persona(Base):
     genero = Column(String)
     correoElectronico = Column(String)
     celular = Column(BigInteger)  # Celular como bigint
-    foto = Column(LargeBinary)
+    foto = Column(String)
 
     def to_json(self):
         return {
@@ -65,7 +66,7 @@ class Persona(Base):
             'genero': self.genero,
             'correoElectronico': self.correoElectronico,
             'celular': self.celular,
-            'foto': self.foto  # Asegúrate de manejar la conversión de bytes a una representación adecuada
+            'foto': self.foto 
         }
 
 class CreateLog(Base):

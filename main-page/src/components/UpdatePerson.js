@@ -41,19 +41,25 @@ function validarCorreoElectronico(correo) {
   return formatoCorreo.test(correo);
 }
 
+function validarStringSinNumeros(texto) {
+  const patronSinNumeros = /^\D+$/;
+  return patronSinNumeros.test(texto);
+}
+
+
 export const UpdatePerson = () => {
 
   // Inicializar todas las variables de la persona
   const [tipoDocumento, setTipoDocumento] = useState('');
-  const [numDocumento, setnumDocumento] = useState('');
+  const [numDocumento, setnumDocumento] = useState(0);
   const [primerNombre, setPrimerNombre] = useState('');
   const [segundoNombre, setSegundoNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [fechaNacimiento, setFechaNacimiento] = useState('');
   const [genero, setGenero] = useState('');
   const [correoElectronico, setCorreoElectronico] = useState('');
-  const [celular, setCelular] = useState('');
-  const [foto, setSelectedFile] = useState('');
+  const [celular, setCelular] = useState(0);
+  const [foto, setSelectedFile] = useState(null);
 
   // Inicializar variable que contendrá todos los datos de la persona
   const [personaData, setPersonaData] = useState({});
@@ -114,48 +120,51 @@ export const UpdatePerson = () => {
     // Envío del método PUT para realizar el UPDATE
     // Envío del método POST para realizar el CREATE con los datos
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      if (typeof numDocumento === "number" && numDocumento.length <= 10) {
-        if (typeof primerNombre != "number" && primerNombre.length <= 30) {
-          if (typeof segundoNombre != "number" && segundoNombre.length <= 30) {
-            if (typeof apellidos != "number" && apellidos.length <= 60) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10) {
+        if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
+          if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
+            if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
               if (validarFormatoFecha(fechaNacimiento)) {
                 if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
                   if (validarCorreoElectronico(correoElectronico)) {
-                    if (typeof celular === "number" && celular.length === 10) {
+                    if (typeof celular === "number" && celular.toString().length === 10) {
+                      if (foto != null) {
 
-                      // falta la foto
-                      await fetch(`http://localhost:8003/${datos}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          tipoDocumento,
-                          primerNombre,
-                          segundoNombre,
-                          apellidos,
-                          fechaNacimiento,
-                          genero,
-                          correoElectronico,
-                          celular,
-                          foto // Aquí va la foto (bytes)
-                        }),
-                      });
+                        // falta la foto
+                        await fetch(`http://localhost:8003/${datos}`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            tipoDocumento,
+                            primerNombre,
+                            segundoNombre,
+                            apellidos,
+                            fechaNacimiento,
+                            genero,
+                            correoElectronico,
+                            celular,
+                            foto // Aquí va la foto (bytes)
+                          }),
+                        });
 
-                      // Esto lo único que hace es que retrocede uno a la página
-                      // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
-                      await navigate(-1);
+                        // Esto lo único que hace es que retrocede uno a la página
+                        // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
+                        await navigate(-1);
 
-
+                      } else {
+                        console.log('escoja una foto')
+                      }
                     } else {
-                      // celular invalido
+                      console.log('digite un número de 10 digitos')// celular invalido
                     }
                   } else {
-                    // correo no valido
+                    console.log('correo no valido')// 
                   }
                 } else {
-                  // genero no valido
+                  console.log('genero no valido')
                 }
               } else {
-                // formato invalido (debe ser dd-mm-aaaa)
+                console.log('formato invalido (debe ser dd-mm-aaaa)')
               }
             } else {
               console.log('Digite apellidos sin números y menos de 60 caracteres')
@@ -167,13 +176,45 @@ export const UpdatePerson = () => {
           console.log('Digite un nombre sin número y de menos de 30 caracteres')
         }
       } else {
-        console.log('digite un número no mayor de 10 caracteres')
+        console.log('digite un número no mayor de 10 digitos')
       }
     } else {
       console.log('digite tipo de doc valido')
     }
-
   }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    // Verificar si se seleccionó un archivo
+    if (file) {
+      // Verificar el tamaño del archivo (en bytes)
+      const fileSize = file.size;
+      const maxSize = 2 * 1024 * 1024; // 2 MB en bytes
+
+      if (fileSize > maxSize) {
+        alert('La imagen seleccionada supera el tamaño máximo permitido de 2 MB.');
+        // Limpiar el campo de entrada de archivos
+        e.target.value = null;
+        setSelectedFile(null);
+        return;
+      }
+
+      // Verificar el tipo de archivo
+      const allowedFormats = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedFormats.includes(file.type)) {
+        alert('Formato de archivo no válido. Solo se permiten archivos JPEG, PNG o GIF.');
+        // Limpiar el campo de entrada de archivos
+        e.target.value = null;
+        setSelectedFile(null);
+        return;
+      }
+
+      // Si pasó las validaciones, puedes hacer algo con el archivo, como almacenarlo en el estado
+      setSelectedFile(file);
+    }
+  };
+
 
   // HTML DEL CÓDIGO
   return <div className='container'>
@@ -194,11 +235,11 @@ export const UpdatePerson = () => {
       <div>
         <label htmlFor="nroDocumento">Nro. Documento:</label>
         <input
-          type="text"
+          type="number"
           id="nroDocumento"
           name="nroDocumento"
           defaultValue={personaData.numDocumento}
-          onChange={e => setnumDocumento(e.target.value)}
+          onChange={e => setnumDocumento(parseInt(e.target.value))}
           disabled
         />
       </div>
@@ -241,7 +282,11 @@ export const UpdatePerson = () => {
           pattern="\d{2}-\d{2}-\d{4}"
           placeholder="dd-mm-aaaa"
           defaultValue={personaData.fechaNacimiento}
-          onChange={e => setFechaNacimiento(e.target.value)}
+          onChange={e => {
+            const inputDate = e.target.value; // Obtiene la fecha en formato "yyyy-mm-dd"
+            const formattedDate = inputDate.split('-').reverse().join('-'); // Convierte a "dd-mm-yyyy"
+            setFechaNacimiento(formattedDate);
+          }}
         />
       </div>
       <div>
@@ -272,24 +317,24 @@ export const UpdatePerson = () => {
       <div>
         <label htmlFor="celular">Celular:</label>
         <input
-          type="text"
+          type="number"
           id="celular"
           name="celular"
           defaultValue={personaData.celular}
-          onChange={e => setCelular(e.target.value)}
+          onChange={e => setCelular(parseInt(e.target.value))}
         />
       </div>
       <div>
         <label htmlFor="foto">Foto (binario):</label>
         <input
-          type="text"  /* Utiliza un input de tipo 'file' para cargar una imagen binaria */
+          type="file"
           id="foto"
           name="foto"
           defaultValue={personaData.foto}
-          onChange={e => setSelectedFile(e.target.value)}
-        // No es necesario utilizar 'value' y 'onChange' para campos de archivo
-        // En su lugar, puedes manejar la carga de la imagen en una función separada
+          onChange={handleFileChange}
         />
+        {/* Puedes mostrar información adicional sobre el archivo seleccionado si es necesario */}
+        {foto && <p>Archivo seleccionado: {foto.name}</p>}
       </div>
 
       <button type="submit" onClick={submit}>Submit</button>

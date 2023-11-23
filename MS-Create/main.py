@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
 from datetime import datetime
+import base64
 
 app = FastAPI()
 
@@ -55,7 +56,7 @@ class Persona(Base):
     genero = Column(String)
     correoElectronico = Column(String)
     celular = Column(BigInteger)  # Celular como bigint
-    foto = Column(LargeBinary)
+    foto = Column(String)
 
 class CreateLog(Base):
     __tablename__ = 'Consola'
@@ -69,7 +70,7 @@ class CreateLog(Base):
 
 # Define un modelo Pydantic que coincida con la clase SQLAlchemy Persona
 class PersonaPydantic(BaseModel):
-    numDocumento: int  # Aquí aún puedes usar int ya que Pydantic no tiene bigint
+    numDocumento: int
     tipoDocumento: str
     primerNombre: str
     segundoNombre: str
@@ -77,8 +78,8 @@ class PersonaPydantic(BaseModel):
     fechaNacimiento: str
     genero: str
     correoElectronico: str
-    celular: int  # En Pydantic sigue siendo int
-    foto: bytes
+    celular: int
+    foto: str
 
     class Config:
         from_attributes = True
