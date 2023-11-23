@@ -2,8 +2,10 @@ import {Prin} from "./components/pag_principal";
 import {CreatePerson} from "./components/CreatePerson";
 import {DeletePerson} from "./components/DeletePerson";
 
-import {SearchPerson} from "./components/SearchPersona";
+import {SearchPerson} from "./components/SearchPerson";
 import {UpdatePerson} from "./components/UpdatePerson";
+
+import {SelectPerson} from "./components/SelectPerson";
 
 import './App.css';
 
@@ -22,6 +24,8 @@ export default function MyApp() {
         <Routes>
             <Route path="/" element={<Prin/>}/>
             <Route path="/create" element={<CreatePerson/>}/>
+
+            <Route path="/select" element={<SelectPerson/>}/>
 
            
             <Route path="/search" element={<SearchPerson/>}/>
