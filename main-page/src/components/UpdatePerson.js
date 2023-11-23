@@ -59,7 +59,7 @@ export const UpdatePerson = () => {
   const [genero, setGenero] = useState('');
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [celular, setCelular] = useState(0);
-  const [foto, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Inicializar variable que contendrá todos los datos de la persona
   const [personaData, setPersonaData] = useState({});
@@ -119,6 +119,7 @@ export const UpdatePerson = () => {
 
     // Envío del método PUT para realizar el UPDATE
     // Envío del método POST para realizar el CREATE con los datos
+    console.log(selectedFile)
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
       if (typeof numDocumento === "number" && numDocumento.toString().length <= 10) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
@@ -128,29 +129,39 @@ export const UpdatePerson = () => {
                 if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
                   if (validarCorreoElectronico(correoElectronico)) {
                     if (typeof celular === "number" && celular.toString().length === 10) {
-                      if (foto != null) {
+                      if (selectedFile != null) {
+                        const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
-                        // falta la foto
-                        await fetch(`http://localhost:8003/${datos}`, {
-                          method: 'PUT',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            tipoDocumento,
-                            primerNombre,
-                            segundoNombre,
-                            apellidos,
-                            fechaNacimiento,
-                            genero,
-                            correoElectronico,
-                            celular,
-                            foto // Aquí va la foto (bytes)
-                          }),
-                        });
+                        const reader = new FileReader();
 
-                        // Esto lo único que hace es que retrocede uno a la página
-                        // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
-                        await navigate(-1);
+                        reader.onload = function () {
+                          const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
 
+                          // falta la foto
+                          fetch(`http://localhost:8003/${datos}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              tipoDocumento,
+                              primerNombre,
+                              segundoNombre,
+                              apellidos,
+                              fechaNacimiento,
+                              genero,
+                              correoElectronico,
+                              celular,
+                              foto // Aquí va la foto (bytes)
+                            }),
+                          });
+
+                          // Esto lo único que hace es que retrocede uno a la página
+                          // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
+                          navigate(-1);
+                        };
+
+                        // Lee el contenido de la imagen como base64
+                        reader.readAsDataURL(fileInput.files[0]);
+                        
                       } else {
                         console.log('escoja una foto')
                       }
@@ -334,7 +345,7 @@ export const UpdatePerson = () => {
           onChange={handleFileChange}
         />
         {/* Puedes mostrar información adicional sobre el archivo seleccionado si es necesario */}
-        {foto && <p>Archivo seleccionado: {foto.name}</p>}
+        {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
       </div>
 
       <button type="submit" onClick={submit}>Submit</button>

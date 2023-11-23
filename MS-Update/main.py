@@ -56,7 +56,7 @@ class Persona(Base):
     genero = Column(String)
     correoElectronico = Column(String)
     celular = Column(BigInteger)  # Celular como bigint
-    foto = Column(LargeBinary)
+    foto = Column(String)
 
     def compare(self, other):
         cambios_antes = ''  # Lista para almacenar las diferencias
@@ -108,7 +108,7 @@ class PersonaPydantic(BaseModel):
     genero: str
     correoElectronico: str
     celular: int  # En Pydantic sigue siendo int
-    foto: bytes
+    foto: str
 
     class Config:
         orm_mode=True
