@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  main-page:
+    build: ./main-page
+    container_name: front_container
+    ports: 
+      - '3000:3000'
+    stdin_open: true
+    tty: true    

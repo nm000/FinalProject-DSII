@@ -18,13 +18,15 @@ app = FastAPI()
 
 # Middleware configuration
 app.add_middleware(
-    CORSMiddleware,
+    CORSMiddleware, 
     allow_origins=['http://localhost:3000'],
     allow_methods=['*'],
     allow_headers=['*']
 )
 
-SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+#SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://sa:123456@localhost:1433/BD_PERSONAS?driver=ODBC+Driver+17+for+SQL+Server"
+
+SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-T1KMRV2\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
