@@ -1,4 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import NavSty from '../styles/styleNav.module.css';
+
+
+export const Prin = () => {
+  // El HTML del menú
+  return(
+    <div>
+        <nav>
+            <div className={NavSty.menu}>
+                <div className={NavSty.logo}>
+                    <a href="/">MyInfoVault</a>
+                </div>
+                <ul>
+                    <li><a href="/create">Crear</a></li>
+                    <li><a href="/search">Modificar</a></li>
+                    <li><a href="/delete">Borrar</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div className={NavSty.img}/>
+        <div className={NavSty.center}>
+            <div className={NavSty.sub_title}>Gestión de información sin esfuerzo</div>
+            <div className={NavSty.btns}>
+                <button>Ver Información</button>
+                <a href="/log" >
+                    <button>Registro</button>
+                </a> 
+            </div>
+        </div>
+    </div>
+);
+}
+// eslint-disable-next-line no-lone-blocks
+{/*import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 
 export const Prin = () => {
@@ -54,4 +89,4 @@ export const Prin = () => {
       </div>
     </div>
   );
-}
+}*/}
