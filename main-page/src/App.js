@@ -7,6 +7,8 @@ import {UpdatePerson} from "./components/UpdatePerson";
 
 import {SelectPerson} from "./components/SelectPerson";
 
+import {LogConsole} from "./components/SelectLog";
+
 import './App.css';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
@@ -32,6 +34,8 @@ export default function MyApp() {
             <Route path="/update" element={<UpdatePerson/>}/>
             
             <Route path="/delete" element={<DeletePerson/>}/>
+
+            <Route path="/log" element={<LogConsole/>}/>
             
         </Routes>
     </BrowserRouter>;
