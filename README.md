@@ -1,8 +1,8 @@
 # Para correr todo el program, necesitas:
 
-1. SQL Server, con la base de datos cargada y las dos tablas necesarias creadas.
-1.1. Abrir 6 terminales 
-2. Correr los microservicios independientes. \n
+## 1. SQL Server, con la base de datos cargada y las dos tablas necesarias creadas.
+## 1.1. Abrir 6 terminales 
+## 2. Correr los microservicios independientes.
 2.1. Correr el Select, entrar a la carpeta con
 ```bash
     cd MS-Read
