@@ -4,7 +4,6 @@ import {useNavigate} from 'react-router-dom';
 export const DeletePerson = () => {
 
     const [numDocumento, setnumDocumento] = useState('');
-    const navigate = useNavigate();
 
     const submit = async e => {
 
@@ -19,7 +18,6 @@ export const DeletePerson = () => {
           
           // Esto lo único que hace es que retrocede uno a la página
           // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones
-          await navigate(-1);
         }          
     
     // El HTML solo tiene el input para la ID 

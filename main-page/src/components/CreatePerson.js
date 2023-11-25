@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function validarFormatoFecha(fecha) {
   // Define una expresión regular para el formato "dd-mm-aaaa"
@@ -46,6 +45,30 @@ function validarStringSinNumeros(texto) {
   return patronSinNumeros.test(texto);
 }
 
+function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
+  // Convertir la fecha de nacimiento al objeto Date
+  const partesFecha = fechaNacimiento.split("-");
+  const fechaNacimientoObj = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
+
+  // Calcular la edad
+  const hoy = new Date();
+  const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
+  const mesActual = hoy.getMonth();
+  const diaActual = hoy.getDate();
+
+  if (mesActual < fechaNacimientoObj.getMonth() || (mesActual === fechaNacimientoObj.getMonth() && diaActual < fechaNacimientoObj.getDate())) {
+    // Aún no ha cumplido años en este año
+    edad--;
+  }
+
+  // Verificar la edad y el tipo de documento
+  if (edad < 18 && tipoDocumento === 'Cedula') {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export const CreatePerson = () => {
 
   // Inicializar todas las variables de la persona
@@ -59,8 +82,6 @@ export const CreatePerson = () => {
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [celular, setCelular] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
-  const navigate = useNavigate();
-
 
   async function submit(e) {
 
@@ -74,55 +95,58 @@ export const CreatePerson = () => {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
             if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
               if (validarFormatoFecha(fechaNacimiento)) {
-                if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
-                  if (validarCorreoElectronico(correoElectronico)) {
-                    if (typeof celular === "number" && celular.toString().length === 10) {
-                      if (selectedFile != null) {
-                        const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
+                if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
+                  if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
+                    if (validarCorreoElectronico(correoElectronico)) {
+                      if (typeof celular === "number" && celular.toString().length === 10) {
+                        if (selectedFile != null) {
+                          const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
-                        const reader = new FileReader();
+                          const reader = new FileReader();
 
-                        reader.onload = function () {
+                          reader.onload = function () {
                             const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
 
                             // Ahora puedes enviar base64String al backend junto con otros datos del formulario
                             fetch('http://localhost:8002/', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                              numDocumento,
-                              tipoDocumento,
-                              primerNombre,
-                              segundoNombre,
-                              apellidos,
-                              fechaNacimiento,
-                              genero,
-                              correoElectronico,
-                              celular,
-                              foto 
-                            }),
-                          });
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                numDocumento,
+                                tipoDocumento,
+                                primerNombre,
+                                segundoNombre,
+                                apellidos,
+                                fechaNacimiento,
+                                genero,
+                                correoElectronico,
+                                celular,
+                                foto
+                              }),
+                            });
 
-                          // Esto lo único que hace es que retrocede uno a la página
-                          // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
-                          navigate(-1);
-                            
-                        };
+                            // Esto lo único que hace es que retrocede uno a la página
+                            // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
 
-                        // Lee el contenido de la imagen como base64
-                        reader.readAsDataURL(fileInput.files[0]);
+                          };
 
+                          // Lee el contenido de la imagen como base64
+                          reader.readAsDataURL(fileInput.files[0]);
+
+                        } else {
+                          console.log('escoja una foto')
+                        }
                       } else {
-                        console.log('escoja una foto')
+                        console.log('digite un número de 10 digitos')// celular invalido
                       }
                     } else {
-                      console.log('digite un número de 10 digitos')// celular invalido
+                      console.log('correo no valido')// 
                     }
                   } else {
-                    console.log('correo no valido')// 
+                    console.log('genero no valido')
                   }
                 } else {
-                  console.log('genero no valido')
+                  console.log('Un menor de edad no puede tener cédula')
                 }
               } else {
                 console.log('formato invalido (debe ser dd-mm-aaaa)')
@@ -239,6 +263,10 @@ export const CreatePerson = () => {
             const formattedDate = inputDate.split('-').reverse().join('-'); // Convierte a "dd-mm-yyyy"
             setFechaNacimiento(formattedDate);
           }}
+
+          max={(new Date()).toISOString().split('T')[0]}
+          min="1900-01-01"
+
         />
       </div>
       <div>

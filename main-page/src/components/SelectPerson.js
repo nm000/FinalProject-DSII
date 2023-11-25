@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const SelectPerson = () => {
 
     // Acá solo se usa el num de documento
     // Esta página solo muestra un input para el documento, que se envía después a la página de update
     const [numDoc, setnumDoc] = useState('');
-    const navigate = useNavigate();
 
     // Inicializar variable que contendrá todos los datos de la persona
     const [personaData, setPersonaData] = useState({});

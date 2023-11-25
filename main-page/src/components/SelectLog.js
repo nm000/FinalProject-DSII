@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export const LogConsole = () => {
 
@@ -8,8 +7,6 @@ export const LogConsole = () => {
   const [numDoc, setnumDoc] = useState('');
   const [tipoDoc, setTipoDoc] = useState('');
   const [fecha, setfecha] = useState('');
-
-  const navigate = useNavigate();
 
   // Inicializar variable que contendrá todos los datos de la persona
   const [personaData, setPersonaData] = useState({});
