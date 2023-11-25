@@ -75,8 +75,6 @@ def read_logs(
 ):
     query = db.query(Log)
 
-    print(tipoDoc)
-
     if tipoDoc:
         query = query.filter(Log.tipoDocumentoPersona == tipoDoc)
     
