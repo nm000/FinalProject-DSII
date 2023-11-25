@@ -86,7 +86,7 @@ export const CreatePerson = () => {
                             const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
 
                             // Ahora puedes enviar base64String al backend junto con otros datos del formulario
-                            fetch('http://localhost:8000/', {
+                            fetch('http://localhost:8002/', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
