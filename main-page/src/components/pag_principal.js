@@ -23,7 +23,9 @@ export const Prin = () => {
         <div className={NavSty.center}>
             <div className={NavSty.sub_title}>Gestión de información sin esfuerzo</div>
             <div className={NavSty.btns}>
+              <a href="/select" >
                 <button>Ver Información</button>
+                </a>
                 <a href="/log" >
                     <button>Registro</button>
                 </a> 

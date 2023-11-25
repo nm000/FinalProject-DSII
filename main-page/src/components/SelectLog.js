@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/LogStyle.css';
 
 export const LogConsole = () => {
 
@@ -26,7 +25,7 @@ export const LogConsole = () => {
 
       if (persona.ok) {
         const personaData = await persona.json();
-
+        console.log(personaData)
         // colocar en personaData todos los datos de la persona
         setPersonaData(personaData);
 
