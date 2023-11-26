@@ -23,7 +23,9 @@ app.add_middleware(
 )
 
 #SQL SERVER Configuration
-SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+#SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/apppersonas"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -42,9 +44,9 @@ def get_db():
 Base = declarative_base()
 
 class Persona(Base):
-    __tablename__ = 'Persona'
+    __tablename__ = 'persona'
 
-    numDocumento = Column(BigInteger, primary_key=True)  # Nro. Documento como bigint
+    numDocumento = Column(Integer, primary_key=True)  # Nro. Documento como bigint
     tipoDocumento = Column(String)
     primerNombre = Column(String)
     segundoNombre = Column(String)
@@ -52,7 +54,7 @@ class Persona(Base):
     fechaNacimiento = Column(String)
     genero = Column(String)
     correoElectronico = Column(String)
-    celular = Column(BigInteger)  # Celular como bigint
+    celular = Column(Integer)  # Celular como bigint
     foto = Column(String)
 
     def to_json(self):
@@ -70,12 +72,12 @@ class Persona(Base):
         }
 
 class CreateLog(Base):
-    __tablename__ = 'Consola'
+    __tablename__ = 'consola'
 
     idlog = Column(Integer, primary_key=True, autoincrement=True)
     dateLog = Column(String)
     accionLog = Column(String)
-    documentoPersona = Column(BigInteger)  # Nro. Documento como bigint
+    documentoPersona = Column(Integer) 
     tipoDocumentoPersona = Column(String)
     valorLog = Column(Text)
 

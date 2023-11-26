@@ -22,7 +22,9 @@ app.add_middleware(
 )
 
 #SQL SERVER Configuration
-SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+#SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
+
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/apppersonas"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
@@ -41,7 +43,7 @@ def get_db():
 Base = declarative_base()
 
 class Log(Base):
-    __tablename__ = 'Consola'
+    __tablename__ = 'consola'
 
     idLog = Column(Integer, primary_key=True)  # Nro. Documento como bigint
     dateLog = Column(String)
