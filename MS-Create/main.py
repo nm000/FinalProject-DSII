@@ -115,3 +115,6 @@ def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
 
     return PersonaPydantic.from_orm(db_persona)  # Convierte y retorna como PersonaPydantic
 
+@app.get("/ruta")
+def mi_ruta():
+    return {"mensaje": "¡Hola desde FastAPI!"}

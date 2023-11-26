@@ -7,3 +7,8 @@ services:
       - '3000:3000'
     stdin_open: true
     tty: true    
+  ms-create:
+    build: ./MS-Create
+    container_name: service_create
+    ports: 
+      - '8002:8002'
