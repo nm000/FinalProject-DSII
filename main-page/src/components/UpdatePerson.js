@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import mod from '../styles/style.module.css';
+import { Link } from 'react-router-dom';
 function validarFormatoFecha(fecha) {
   // Define una expresión regular para el formato "dd-mm-aaaa"
   const formatoFecha = /^(\d{2})-(\d{2})-(\d{4})$/;
@@ -255,132 +256,147 @@ export const UpdatePerson = () => {
 
 
   // HTML DEL CÓDIGO
-  return <div className='container'>
-    <form>
-      <div>
-        <label htmlFor="tipoDocumento">Tipo de Documento:</label>
-        <select
-          id="tipoDocumento"
-          name="tipoDocumento"
-          onChange={e => setTipoDocumento(e.target.value)}
-        >
-          <option value="">Selecciona una opción</option>
-          <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-          <option value="Cedula">Cédula</option>
-        </select>
-
-      </div>
-      <div>
-        <label htmlFor="nroDocumento">Nro. Documento:</label>
-        <input
-          type="number"
-          id="nroDocumento"
-          name="nroDocumento"
-          defaultValue={personaData.numDocumento}
-          onChange={e => setnumDocumento(parseInt(e.target.value))}
-          disabled
-        />
-      </div>
-      <div>
-        <label htmlFor="primerNombre">Primer Nombre:</label>
-        <input
-          type="text"
-          id="primerNombre"
-          name="primerNombre"
-          defaultValue={personaData.primerNombre}
-          onChange={e => setPrimerNombre(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="segundoNombre">Segundo Nombre:</label>
-        <input
-          type="text"
-          id="segundoNombre"
-          name="segundoNombre"
-          defaultValue={personaData.segundoNombre}
-          onChange={e => setSegundoNombre(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="apellidos">Apellidos:</label>
-        <input
-          type="text"
-          id="apellidos"
-          name="apellidos"
-          defaultValue={personaData.apellidos}
-          onChange={e => setApellidos(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="fechaNacimiento">Fecha de Nacimiento:</label>
-        <input
-          type="date"
-          id="fechaNacimiento"
-          name="fechaNacimiento"
-          pattern="\d{2}-\d{2}-\d{4}"
-          placeholder="dd-mm-aaaa"
-          defaultValue={personaData.fechaNacimiento}
-          onChange={e => {
-            const inputDate = e.target.value; // Obtiene la fecha en formato "yyyy-mm-dd"
-            const formattedDate = inputDate.split('-').reverse().join('-'); // Convierte a "dd-mm-yyyy"
-            setFechaNacimiento(formattedDate);
-          }}
-          
-          max={(new Date()).toISOString().split('T')[0]}
-          min="1900-01-01"
-
-        />
-      </div>
-      <div>
-        <label htmlFor="genero">Género:</label>
-        <select
-          id="genero"
-          name="genero"
-
-          onChange={e => setGenero(e.target.value)}
-        >
-          <option value="">Selecciona una opción</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Femenino">Femenino</option>
-          <option value="No binario">No binario</option>
-          <option value="Prefiero no responder">Prefiero no responder</option>
-        </select>
-      </div>
-      <div>
-        <label htmlFor="correoElectronico">Correo Electrónico:</label>
-        <input
-          type="email"
-          id="correoElectronico"
-          name="correoElectronico"
-          defaultValue={personaData.correoElectronico}
-          onChange={e => setCorreoElectronico(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="celular">Celular:</label>
-        <input
-          type="number"
-          id="celular"
-          name="celular"
-          defaultValue={personaData.celular}
-          onChange={e => setCelular(parseInt(e.target.value))}
-        />
-      </div>
-      <div>
-        <label htmlFor="foto">Foto (binario):</label>
-        <input
-          type="file"
-          id="foto"
-          name="foto"
-          defaultValue={personaData.foto}
-          onChange={handleFileChange}
-        />
-        {/* Puedes mostrar información adicional sobre el archivo seleccionado si es necesario */}
-        {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
-      </div>
-
-      <button type="submit" onClick={submit}>Submit</button>
-
-    </form>
+  return <div className={mod.containerform}>
+  <div className={mod.information}>
+    <div className={mod.infochilds}>
+      <h2>Bienvenido</h2>
+      <p>¿Quieres hacer algo más con tu información?</p>
+      <Link to="/create" style={{ textDecoration: 'none' }}>
+        <input type="button" value="Añadir" />
+      </Link>
+      <Link to="/delete" style={{ textDecoration: 'none' }}>
+        <input type="button" value="Borrar" />
+      </Link>
+    </div>
   </div>
+  <div className={mod.forminformation}>
+    <div className={mod.forminformationchilds}>
+      <h2>Modificar Información</h2>
+      <div className={mod.icons}>
+        <a href="/select">
+          <box-icon type='solid' name='a'></box-icon>
+        </a>
+        <a href="/select">
+          <i className='bx bx-search'></i>
+        </a>
+      </div>
+      <p>o consultar tu información</p>
+
+      <form className={mod.form}>
+      <label >
+          <i className='bx bxs-user-account'></i>
+            <select
+              id="tipoDocumento" name="tipoDocumento" onChange={(e) => setTipoDocumento(e.target.value)}
+            >
+              <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
+              <option value="Tarjeta de identidad">Tarjeta de identidad</option>
+              <option value="Cedula">Cédula</option>
+            </select>
+          </label>
+          <label>
+          <i className='bx bxs-id-card'></i>
+          <input
+       type="number"
+       id="nroDocumento"
+       name="nroDocumento"
+       placeholder={numDocumento} 
+       defaultValue={personaData.numDocumento}
+       onChange={e => setnumDocumento(parseInt(e.target.value))}
+       disabled
+     
+            />
+          </label>
+          <label>
+          <i className='bx bx-street-view'></i>
+            <input
+              type="text"
+              id="primerNombre"
+              name="primerNombre" placeholder="Primer nombre" 
+              onChange={(e) => setPrimerNombre(e.target.value)}
+            />
+          </label>
+          <label>
+          <i className='bx bx-street-view'></i>
+            <input
+              type="text"
+              id="segundoNombre"
+              name="segundoNombre" placeholder="Segundo nombre"
+              onChange={(e) => setSegundoNombre(e.target.value)}
+            />
+          </label>
+          <label >
+          <i className='bx bx-user'></i>
+            <input
+            
+              type="text"
+              id="apellidos"
+              name="apellidos" placeholder="Apellidos" 
+              onChange={(e) => setApellidos(e.target.value)}
+            />
+          </label>
+          <label >
+            <input
+              type="date"
+              id="fechaNacimiento"
+              name="fechaNacimiento" placeholder="Fecha Nacimiento"
+              onChange={(e) => {
+                const inputDate = e.target.value;
+                const formattedDate = inputDate
+                  .split('-')
+                  .reverse()
+                  .join('-');
+                setFechaNacimiento(formattedDate);
+              }}
+            />
+          </label>
+          <label >
+          <i className='bx bx-male-female'></i>
+            <select
+              id="genero"
+              name="genero"
+              onChange={(e) => setGenero(e.target.value)}
+            >
+              <option value="Seleccione su genero">Seleccione su genero</option>"
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="No binario">No binario</option>
+              <option value="Prefiero no responder">Prefiero no responder</option>
+            </select>
+          </label>
+          <label >
+          <i className='bx bx-envelope'></i>
+            <input
+              type="email"
+              id="correoElectronico"
+              name="correoElectronico" placeholder="Correo Electronico"
+              onChange={(e) => setCorreoElectronico(e.target.value)}
+            /></label>
+
+          <label >
+          <i className='bx bx-phone'></i>
+            <input
+              type="number"
+              id="celular"
+              name="celular"
+              placeholder="Num Celular"
+              onChange={(e) => setCelular(parseInt(e.target.value))}
+            /></label>
+  
+        <label>
+          <i className='bx bxs-user-rectangle'></i>
+          <input
+            type="file"
+            id="foto"
+            name="foto"
+            defaultValue={personaData.foto}
+            onChange={handleFileChange}
+          />
+          {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
+        </label>
+
+        <input type="submit" value="Aceptar" onClick={submit}/>
+      </form>
+    </div>
+  </div>
+</div>
 } 

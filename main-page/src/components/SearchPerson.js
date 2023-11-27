@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
+import Search from '../styles/style.module.css';
+import { Link } from 'react-router-dom';
 
 export const SearchPerson = () => {
 
@@ -17,21 +19,45 @@ export const SearchPerson = () => {
         }          
     
     // Solo un HTML para el input del num de documento
-    return <div className='container'>
-                <form>         
-                <div>
-                <label htmlFor="nroDocumento">Nro. Documento:</label>
-                <input
-                    type="text"
-                    id="nroDocumento"
-                    name="nroDocumento"
-                    // onChange actualiza la variable del dato cada vez que se cambia en el input
-                    onChange={e => setnumDocumento(e.target.value)}
-                />
-                </div>
-
-                <button type="submit"onClick={submit}>Submit</button>
-
-                </form>
-            </div>
+    return <div className={Search.containerform}>
+    <div className={Search.information}>
+      <div className={Search.infochilds}>
+        <h2>Bienvenido</h2>
+        <p>¿Quieres hacer algo más con tu información?</p>
+        <Link to="/create" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Añadir" />
+        </Link>
+        <Link to="/delete" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Borrar" />
+        </Link>
+      </div>
+    </div>
+    <div className={Search.forminformation}>
+      <div className={Search.forminformationchilds}>
+        <h2>Ingrese Documento para modificar</h2>
+        <div className={Search.icons}>
+          <a href="/select">
+            <box-icon type='solid' name='a'></box-icon>
+          </a>
+          <a href="/select">
+            <i class='bx bx-search'></i>
+          </a>
+        </div>
+        <p>o consultar tu información</p>
+        <form className={Search.form}>
+          <label>
+            <i class='bx bxs-id-card'></i>
+            <input
+              type="text"
+              placeholder="Documento"
+              onChange={(e) => setnumDocumento(e.target.value)}
+            />
+          </label>
+          <Link to="/update" style={{ textDecoration: 'none' }}>
+            <input type="submit" value="Buscar" id="Buscar" onClick={submit} />
+          </Link>
+        </form>
+      </div>
+    </div>
+  </div>
 }
