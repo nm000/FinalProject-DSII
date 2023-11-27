@@ -2,9 +2,50 @@ import React from 'react';
 
 import NavSty from '../styles/styleNav.module.css';
 
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 export const Prin = () => {
   // El HTML del menú
+  const navigate = useNavigate();
+
+  async function validateMicroservice(microservices) {
+    try {
+      for (const { endpoint, ports } of microservices) {
+        for (const port of ports) {
+          const response = await fetch(`http://localhost:${port}/disp`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+          }
+
+          const repuesta = await response.json();
+
+          if (!repuesta.disponibilidad) {
+            Swal.fire({
+              icon: "error",
+              title: "Lo sentimos...",
+              text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+            });
+            return;  // Salir de la función si un microservicio no está disponible
+          }
+        }
+      }
+
+      // Si todos los microservicios están disponibles, redirige a la página correspondiente
+      navigate(`/${microservices[0].endpoint}`);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Lo sentimos...",
+        text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+      });
+    }
+  }
+
   return(
     <div>
         <nav>
@@ -13,9 +54,9 @@ export const Prin = () => {
                     <a href="/">MyInfoVault</a>
                 </div>
                 <ul>
-                    <li><a href="/create">Crear</a></li>
-                    <li><a href="/search">Modificar</a></li>
-                    <li><a href="/delete">Borrar</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >Crear</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8000', '8003'] }])} >Modificar</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >Borrar</a></li>
                 </ul>
             </div>
         </nav>
@@ -23,10 +64,10 @@ export const Prin = () => {
         <div className={NavSty.center}>
             <div className={NavSty.sub_title}>Gestión de información sin esfuerzo</div>
             <div className={NavSty.btns}>
-              <a href="/select" >
+              <a onClick={() => validateMicroservice([{ endpoint: 'select', ports: ['8000'] }])} >
                 <button>Ver Información</button>
                 </a>
-                <a href="/log" >
+                <a onClick={() => validateMicroservice([{ endpoint: 'log', ports: ['8004'] }])} >
                     <button>Registro</button>
                 </a> 
             </div>

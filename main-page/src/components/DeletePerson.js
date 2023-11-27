@@ -11,7 +11,7 @@ export const DeletePerson = () => {
         e.preventDefault();
         
         // Se envía la solicitud DELETE al microservicio, enviando el num. de identificación mediante la URL
-        await fetch(`http://localhost:8001/${numDocumento}`, {
+        await fetch(`http://localhost:8001/persona/${numDocumento}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
           });

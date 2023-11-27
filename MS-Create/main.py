@@ -2,12 +2,13 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Float, Date, Enum, Text, LargeBinary
+from sqlalchemy import Column, Integer, String, Float, Date, Enum, Text, LargeBinary, text
 from sqlalchemy import BigInteger
 
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
@@ -47,6 +48,15 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def verificar_disponibilidad_tabla(db: Session, tabla: str):
+    try:
+        # Intenta realizar una consulta simple para verificar la disponibilidad de la tabla
+        db.execute(text(f"SELECT 1 FROM {tabla} LIMIT 1"))
+        return True  # Si la consulta es exitosa, la tabla está disponible
+    except OperationalError as e:
+        print(f"Error al verificar la disponibilidad de la tabla {tabla}: {str(e)}")
+        return False  # Si hay un error, la tabla no está disponible
 
 Base = declarative_base()
 
@@ -118,6 +128,12 @@ def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
 
     return PersonaPydantic.from_orm(db_persona)  # Convierte y retorna como PersonaPydantic
 
-@app.get("/ruta")
-def mi_ruta():
-    return {"mensaje": "¡Hola desde FastAPI!"}
+@app.get("/disp")
+def mi_ruta(db: Session = Depends(get_db)):
+    # Luego puedes llamar a esta función para cada tabla que deseas verificar
+    if verificar_disponibilidad_tabla(db, "persona") and verificar_disponibilidad_tabla(db, "consola"):
+        disp = True
+    else:
+        disp = False
+
+    return {'disponibilidad': disp}

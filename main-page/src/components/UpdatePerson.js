@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function validarFormatoFecha(fecha) {
   // Define una expresión regular para el formato "dd-mm-aaaa"
@@ -101,7 +101,7 @@ export const UpdatePerson = () => {
     try {
 
       // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
-      const persona = await fetch(`http://localhost:8000/${datos}`);
+      const persona = await fetch(`http://localhost:8000/persona/${datos}`);
 
       if (persona.ok) {
         const personaData = await persona.json();
@@ -159,25 +159,46 @@ export const UpdatePerson = () => {
 
                           const reader = new FileReader();
 
-                          reader.onload = function () {
-                            const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
+                          reader.onload = async function () {
+                            try {
+                              const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
 
-                            // falta la foto
-                            fetch(`http://localhost:8003/${datos}`, {
-                              method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                tipoDocumento,
-                                primerNombre,
-                                segundoNombre,
-                                apellidos,
-                                fechaNacimiento,
-                                genero,
-                                correoElectronico,
-                                celular,
-                                foto // Aquí va la foto (bytes)
-                              }),
-                            });
+                              // falta la foto
+                              const response = await fetch(`http://localhost:8003/${datos}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  tipoDocumento,
+                                  primerNombre,
+                                  segundoNombre,
+                                  apellidos,
+                                  fechaNacimiento,
+                                  genero,
+                                  correoElectronico,
+                                  celular,
+                                  foto
+                                }),
+                              });
+
+                              // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
+                              if (!response.ok) {
+                                throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                              }
+
+                              Swal.fire({
+                                title: "¡Bien hecho!",
+                                text: "¡Te has registrado exitosamente!",
+                                icon: "success"
+                              });
+
+                            } catch (error) {
+                              // Aquí manejas cualquier error que ocurra durante la solicitud
+                              Swal.fire({
+                                icon: "error",
+                                title: "Lo sentimos...",
+                                text: "Hubo un error del lado del servidor"
+                              });
+                            }
 
                             // Esto lo único que hace es que retrocede uno a la página
                             // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
@@ -187,37 +208,81 @@ export const UpdatePerson = () => {
                           reader.readAsDataURL(fileInput.files[0]);
 
                         } else {
-                          console.log('escoja una foto')
+                          Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Escoja una foto"
+                          });
                         }
                       } else {
-                        console.log('digite un número de 10 digitos')// celular invalido
+                        Swal.fire({
+                          icon: "error",
+                          title: "Oops...",
+                          text: "Digite un número celular de 10 dígitos exactamente"
+                        });
                       }
                     } else {
-                      console.log('correo no valido')// 
+                      Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Digite un correo válido"
+                      });
                     }
                   } else {
-                    console.log('genero no valido')
+                    Swal.fire({
+                      icon: "error",
+                      title: "Oops...",
+                      text: "Seleccione un género válido"
+                    });
                   }
                 } else {
-                  console.log('Un menor de edad no puede tener cédula')
+                  Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Un menor de edad no puede tener cédula"
+                  });
                 }
               } else {
-                console.log('formato invalido (debe ser dd-mm-aaaa)')
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Seleccione una fecha válida y dentro del rango permitido"
+                });
               }
             } else {
-              console.log('Digite apellidos sin números y menos de 60 caracteres')
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Sus apellidos deben tener 60 caracteres o menos, sin números"
+              });
             }
           } else {
-            console.log('Digite un segundo nombre sin número y de menos de 30 caracteres')
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Su segundo nombre debe tener 30 caracteres o menos, sin números"
+            });
           }
         } else {
-          console.log('Digite un nombre sin número y de menos de 30 caracteres')
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Su nombre debe tener 30 caracteres o menos, sin números"
+          });
         }
       } else {
-        console.log('digite un número no mayor de 10 digitos')
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        });
       }
     } else {
-      console.log('digite tipo de doc valido')
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Digite un tipo de documento válido"
+      });
     }
   }
 
@@ -231,7 +296,11 @@ export const UpdatePerson = () => {
       const maxSize = 2 * 1024 * 1024; // 2 MB en bytes
 
       if (fileSize > maxSize) {
-        alert('La imagen seleccionada supera el tamaño máximo permitido de 2 MB.');
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "La imagen seleccionada supera el tamaño máximo permitido de 2 MB."
+        });
         // Limpiar el campo de entrada de archivos
         e.target.value = null;
         setSelectedFile(null);
@@ -241,7 +310,11 @@ export const UpdatePerson = () => {
       // Verificar el tipo de archivo
       const allowedFormats = ['image/jpeg', 'image/png', 'image/gif'];
       if (!allowedFormats.includes(file.type)) {
-        alert('Formato de archivo no válido. Solo se permiten archivos JPEG, PNG o GIF.');
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Formato de archivo no válido. Solo se permiten archivos JPEG, PNG o GIF."
+        });
         // Limpiar el campo de entrada de archivos
         e.target.value = null;
         setSelectedFile(null);
@@ -325,7 +398,7 @@ export const UpdatePerson = () => {
             const formattedDate = inputDate.split('-').reverse().join('-'); // Convierte a "dd-mm-yyyy"
             setFechaNacimiento(formattedDate);
           }}
-          
+
           max={(new Date()).toISOString().split('T')[0]}
           min="1900-01-01"
 
