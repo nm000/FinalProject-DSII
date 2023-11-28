@@ -31,7 +31,7 @@ app.add_middleware(
 #DESKTOP-61S4LKS
 #DESKTOP-T1KMRV2
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/apppersonas"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:123456@db:3306/apppersonas"
 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -106,7 +106,6 @@ class PersonaPydantic(BaseModel):
 def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
     # Crear la persona
     db_persona = Persona(**persona.dict())  # Crea una instancia de Persona
-    print(db_persona.celular)
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)

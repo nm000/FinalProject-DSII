@@ -64,7 +64,7 @@ export const Prin = () => {
         <div className={NavSty.center}>
             <div className={NavSty.sub_title}>Gestión de información sin esfuerzo</div>
             <div className={NavSty.btns}>
-              <a onClick={() => validateMicroservice([{ endpoint: 'select', ports: ['8000'] }])} >
+              <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
                 <button>Ver Información</button>
                 </a>
                 <a onClick={() => validateMicroservice([{ endpoint: 'log', ports: ['8004'] }])} >

@@ -1,214 +1,214 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import mod from '../styles/style.module.css';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export const SelectPerson = () => {
 
-    // Acá solo se usa el num de documento
-    // Esta página solo muestra un input para el documento, que se envía después a la página de update
-    const [numDoc, setnumDoc] = useState('');
+    // Inicializar todas las variables de la persona
+  const [tipoDocumento, setTipoDocumento] = useState('');
+  const [numDocumento, setnumDocumento] = useState(0);
+  const [primerNombre, setPrimerNombre] = useState('');
+  const [segundoNombre, setSegundoNombre] = useState('');
+  const [apellidos, setApellidos] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [genero, setGenero] = useState('');
+  const [correoElectronico, setCorreoElectronico] = useState('');
+  const [celular, setCelular] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
 
-    // Inicializar variable que contendrá todos los datos de la persona
-    const [personaData, setPersonaData] = useState({});
+  // Inicializar variable que contendrá todos los datos de la persona
+  const [personaData, setPersonaData] = useState({});
 
-    const submit = async e => {
+  // Obtener la URL de la página
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
 
-        e.preventDefault();
-        // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
-        try {
+  // En este punto, en la URL habrá como http://localhost:3000/update?datos=97544527
+  // Esta función obtiene lo que sea que va después de datos= 
+  const datos = urlParams.get('datos'); // Obtiene la IDENTIFICACIÓN desde la URL
 
-            // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
-            const persona = await fetch(`http://localhost:8000/persona/${numDoc}`);
+  // La función que maneja la solicitud GET y carga los datos en los campos de entrada
+  const getPersonaData = async () => {
+    try {
 
-            if (persona.ok) {
-                const personaData = await persona.json();
+      // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
+      const persona = await fetch(`http://localhost:8000/persona/${datos}`);
 
-                setPersonaData(personaData);
+      if (persona.ok) {
+        const personaData = await persona.json();
 
-                // Decodifica el string base64 a un array de bytes
-                const fotoBytes = atob(personaData.foto);
+        // colocar en personaData todos los datos de la persona
+        setPersonaData(personaData);
 
-                // Convierte los bytes a un array Uint8
-                const fotoUint8Array = new Uint8Array(fotoBytes.length);
-                for (let i = 0; i < fotoBytes.length; i++) {
-                    fotoUint8Array[i] = fotoBytes.charCodeAt(i);
-                }
+        // Colocar a cada variable el valor actual de la persona
+        setTipoDocumento(personaData.tipoDocumento);
+        setnumDocumento(personaData.numDocumento);
+        setPrimerNombre(personaData.primerNombre);
+        setSegundoNombre(personaData.segundoNombre);
+        setApellidos(personaData.apellidos);
+        setFechaNacimiento(personaData.fechaNacimiento);
+        setGenero(personaData.genero);
+        setCorreoElectronico(personaData.correoElectronico);
+        setCelular(personaData.celular);
+        setSelectedFile(personaData.foto);
 
-                // Obtén la imagen como un objeto Blob
-                const imagenBlob = new Blob([fotoUint8Array], { type: 'image/jpeg' });
-
-                // Crea una URL de objeto para la imagen
-                const imagenUrl = URL.createObjectURL(imagenBlob);
-
-                // Asigna la URL de objeto a la propiedad src de una etiqueta img
-                const imagenElement = document.getElementById('imagenPersona');
-                imagenElement.src = imagenUrl;
-
-            } else {
-                console.error('Error en la solicitud HTTP');
-            }
-        } catch (error) {
-            console.error('Ocurrió un error:', error);
-        }
-
+      } else {
+        console.error('Error en la solicitud HTTP');
+      }
+    } catch (error) {
+      console.error('Ocurrió un error:', error);
     }
+  };
+
+  useEffect(() => {
+    // Llama a la función para obtener los datos cuando se monta el componente
+    getPersonaData();
+  }, []);
+
+  const formatearFechaVisual = (fecha) => {
+    const [dia, mes, anio] = fecha.split('-');
+    return `${anio}-${mes}-${dia}`;
+  };
 
     // Solo un HTML para el input del num de documento
-    return <div className='container'>
-        <div className={logstyle.img} />
-        <div className={styleShow.containerform}>
-            <div className={styleShow.information}>
-                <div className={styleShow.infochilds}>
-                    <h2>-------------</h2>
-                    <h3>Acerca de mi: </h3>
-                    <p>Genero: <span>------------</span></p>
-                    <p>Fecha de Nacimiento: <span></span>---</p>
-                    <h3>Informacion de contacto:</h3>
-                    <p>Número de Celular: <span>------</span></p>
-                    <p>Correo Electrónico: <span>------</span></p>
-                </div>
-            </div>
-            <div className={styleShow.forminformation}>
-                <div className={styleShow.forminformationchilds}>
-                    <img src={user} />
-                    <p>Seleccione el tipo de documento:</p>
-                    <form className={styleShow.form}>
-                        <label >
-                            <i className='bx bxs-user-account'></i>
-                            <select
-                                id="tipoDocumento" name="tipoDocumento" onChange={(e) => setTipoDocumento(e.target.value)}
-                            >
-                                <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
-                                <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-                                <option value="Cedula">Cédula</option>
-                            </select>
-                        </label>
-                    </form>
-                    <p>Digite el numero de documento:</p>
-                    <label>
-                        <i className='bx bxs-id-card'></i>
-                        <input
-                            type="number"
-                            id="numDocumento"
-                            name="numDocumento" placeholder="Documento"
-                            onChange={(e) => setnumDocumento(parseInt(e.target.value))}
-                        />
-                    </label>
-                    <form className={styleShow.form}>
-                        <button type="submit" onClick={submit}>mostrar</button>
-                        <Link to="/" style={{ textDecoration: 'none' }}>
-                            <input type="button" defaultValue="Volver al inicio" />
-                        </Link>
-                    </form>
-                </div>
-            </div>
+    return <div className={mod.containerform}>
+    <div className={mod.information}>
+      <div className={mod.infochilds}>
+        <h2>Bienvenido(a), {personaData.primerNombre}</h2>
+        <div>
+          <img
+            src={`data:image/png;base64,${personaData.foto}`}
+            alt="Foto de la persona"
+            style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '20%',  objectFit: 'cover'   }}
+          />
         </div>
-        <div className={styleShow.hide}>
-            <div className={styleShow.information}>
-                <div className={styleShow.infochilds}>
-                    <h2>
-                        <input
-                            type="text"
-                            id="primerNombre"
-                            name="primerNombre"
-                            defaultValue={personaData.primerNombre}
-                            disabled
-                        />
-                        <input
-                            type="text"
-                            id="segundoNombre"
-                            name="segundoNombre"
-                            defaultValue={personaData.segundoNombre}
-                            disabled
-                        />
-                        <input
-                            type="text"
-                            id="apellidos"
-                            name="apellidos"
-                            defaultValue={personaData.apellidos}
-                            disabled
-                        />
-                    </h2>
-                    <h3>Acerca de mi:</h3>
-                    <p>Genero:
-                        <input
-                            type="text"  /* Utiliza un input de tipo 'file' para cargar una imagen binaria */
-                            id="genero"
-                            name="genero"
-                            defaultValue={personaData.genero}
-                            disabled
-                        // No es necesario utilizar 'value' y 'onChange' para campos de archivo
-                        // En su lugar, puedes manejar la carga de la imagen en una función separada
-                        />
-                    </p>
-                    <p>Fecha de Nacimiento:
-                        <input
-                            type="date"
-                            id="fechaNacimiento"
-                            name="fechaNacimiento"
-                            pattern="\d{2}-\d{2}-\d{4}"
-                            placeholder="dd-mm-aaaa"
-                            defaultValue={personaData.fechaNacimiento}
-                            disabled
-                        />
-                    </p>
-                    <h3>Informacion de contacto:</h3>
-                    <p>Número de Celular:
-                        <input
-                            type="text"
-                            id="celular"
-                            name="celular"
-                            defaultValue={personaData.celular}
-                            disabled
-                        />
-                    </p>
-                    <p>Correo Electrónico:
-                        <input
-                            type="email"
-                            id="correoElectronico"
-                            name="correoElectronico"
-                            defaultValue={personaData.correoElectronico}
-                            disabled
-                        />
-                    </p>
-                </div>
-            </div>
-            <div className={styleShow.forminformation}>
-                <div className={styleShow.forminformationchilds}>
-                    <input
-                        type="file"
-                        id="foto"
-                        name="foto"
-                        DefaultValue={personaData.selectedFile}
-                        disabled
-                    />
-                    <h3>Inforamcion de usuario: </h3>
-                    <p>Tipo de documento:
-                        <input
-                            type="tipoDocumento"
-                            id="tipoDocumento"
-                            name="tipoDocumento"
-                            defaultValue={personaData.tipoDocumento}
-                            disabled
-                        />
-                    </p>
-                    <p>Numero de documento:
-                        <input
-                            type="text"
-                            id="nroDocumento"
-                            name="nroDocumento"
-                            defaultValue={personaData.numDocumento}
-                            disabled
-                        />
-                    </p>
-                    <form className={styleShow.form}>
-                        <Link to="/select" style={{ textDecoration: 'none' }}>
-                            <input type="button" defaultValue="Volver a buscar" />
-                        </Link>
-                        <Link to="/" style={{ textDecoration: 'none' }}>
-                            <input type="button" defaultValue="Volver al inicio" />
-                        </Link>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <p>¿Quieres hacer algo más?</p>
+        <Link to="/create" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Añadir" />
+        </Link>
+        <Link to="/delete" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Borrar" />
+        </Link>
+      </div>
     </div>
+    <div className={mod.forminformation}>
+      <div className={mod.forminformationchilds}>
+        <h2>Consultar Información</h2>
+        <div className={mod.icons}>
+          <a href="/select">
+            <box-icon type='solid' name='a'></box-icon>
+          </a>
+          <a href="/search">
+            <i className='bx bx-edit'></i>
+          </a>
+        </div>
+        <p>o modificar tu información</p>
+
+        <form className={mod.form}>
+          <label >
+            <i className='bx bxs-user-account'></i>
+            <select
+              id="tipoDocumento" name="tipoDocumento" value={tipoDocumento}
+              readOnly
+            >
+              <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
+              <option value="Tarjeta de identidad">Tarjeta de identidad</option>
+              <option value="Cedula">Cédula</option>
+            </select>
+          </label>
+          <label>
+            <i className='bx bxs-id-card'></i>
+            <input
+              type="number"
+              id="nroDocumento"
+              name="nroDocumento"
+              placeholder={numDocumento}
+              defaultValue={personaData.numDocumento}
+              readOnly
+            />
+          </label>
+          <label>
+            <i className='bx bx-street-view'></i>
+            <input
+              type="text"
+              id="primerNombre"
+              name="primerNombre" placeholder="Primer nombre"
+              defaultValue={personaData.primerNombre}
+              readOnly
+            />
+          </label>
+          <label>
+            <i className='bx bx-street-view'></i>
+            <input
+              type="text"
+              id="segundoNombre"
+              name="segundoNombre" placeholder="Segundo nombre"
+              defaultValue={personaData.segundoNombre}
+              readOnly
+            />
+          </label>
+          <label >
+            <i className='bx bx-user'></i>
+            <input
+
+              type="text"
+              id="apellidos"
+              name="apellidos" placeholder="Apellidos"
+              defaultValue={personaData.apellidos}
+              readOnly
+            />
+          </label>
+          <label >
+            <input
+              type="date"
+              id="fechaNacimiento"
+              name="fechaNacimiento" placeholder="Fecha Nacimiento"
+              pattern="\d{2}-\d{2}-\d{4}"
+              
+              max={(new Date()).toISOString().split('T')[0]}
+              min="1900-01-01"
+              readOnly
+              value={fechaNacimiento ? formatearFechaVisual(fechaNacimiento) : ""}
+            />
+          </label>
+          <label >
+            <i className='bx bx-male-female'></i>
+            <select
+              id="genero"
+              name="genero"
+              value={genero}
+              readOnly
+            >
+              <option value="Seleccione su género">Seleccione su género</option>"
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="No binario">No binario</option>
+              <option value="Prefiero no responder">Prefiero no responder</option>
+            </select>
+          </label>
+          <label >
+            <i className='bx bx-envelope'></i>
+            <input
+              type="email"
+              id="correoElectronico"
+              name="correoElectronico" placeholder="Correo Electrónico"
+              readOnly
+              defaultValue={personaData.correoElectronico}
+            /></label>
+
+          <label >
+            <i className='bx bx-phone'></i>
+            <input
+              type="number"
+              id="celular"
+              name="celular"
+              placeholder="Num Celular"
+              readOnly
+              defaultValue={personaData.celular}
+            /></label>
+        </form>
+      </div>
+    </div>
+  </div>
 }

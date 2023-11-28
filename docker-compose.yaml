@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   main-page:
     build: ./main-page
@@ -6,14 +7,77 @@ services:
     ports: 
       - '3000:3000'
     stdin_open: true
-    tty: true    
+    tty: true
+
   ms-create:
     build: ./MS-Create
     container_name: service_create
-    ports: 
-      - '8002:8002'
-  db:
-    build: ./Db
-    container_name: database
     ports:
-        - 1433:1433
+      - '8002:8002'
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:@db:3306/apppersonas  # Adjust these values accordingly
+    volumes:
+      - ./MS-Create:/app
+  
+  ms-delete:
+    build: ./MS-Delete
+    container_name: service_delete
+    ports:
+      - '8001:8001'
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:@db:3306/apppersonas  # Adjust these values accordingly
+    volumes:
+      - ./MS-Delete:/app
+
+  ms-log:
+    build: ./MS-Log
+    container_name: service_log
+    ports:
+      - '8004:8004'
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:@db:3306/apppersonas  # Adjust these values accordingly
+    volumes:
+      - ./MS-Log:/app
+
+  ms-read:
+    build: ./MS-Read
+    container_name: service_read
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:@db:3306/apppersonas  # Adjust these values accordingly
+    volumes:
+      - ./MS-Read:/app
+
+  ms-update:
+    build: ./MS-Update
+    container_name: service_update
+    ports:
+      - '8003:8003'
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:@db:3306/apppersonas  # Adjust these values accordingly
+    volumes:
+      - ./MS-Update:/app
+      
+  db:
+    image: mysql:latest
+    container_name: mysql_container
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: apppersonas
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Monta el script en la carpeta de inicialización

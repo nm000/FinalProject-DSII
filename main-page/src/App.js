@@ -5,6 +5,7 @@ import {DeletePerson} from "./components/DeletePerson";
 import {SearchPerson} from "./components/SearchPerson";
 import {UpdatePerson} from "./components/UpdatePerson";
 
+import {SearchPersonSelect} from "./components/Select_1";
 import {SelectPerson} from "./components/SelectPerson";
 
 import {LogConsole} from "./components/SelectLog";
@@ -27,8 +28,8 @@ export default function MyApp() {
             <Route path="/" element={<Prin/>}/>
             <Route path="/create" element={<CreatePerson/>}/>
 
-            <Route path="/select" element={<SelectPerson/>}/>
-
+            <Route path="/searchperson" element={<SearchPersonSelect/>}/>
+            <Route path="/persona" element={<SelectPerson/>}/>
            
             <Route path="/search" element={<SearchPerson/>}/>
             <Route path="/update" element={<UpdatePerson/>}/>

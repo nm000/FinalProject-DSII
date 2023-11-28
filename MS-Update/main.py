@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 #SQL SERVER Configuration
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/apppersonas"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:123456@db:3306/apppersonas"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
