@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="LogStyle.css">
+
+
+
+</head>
+
+<body>
+    <div class="img"></div>
+    <div class="container-form delete">
+        <div class="information">
+            <div class="info-childs">
+                <h2>CONSULTA DE REGISTRO</h2>
+
+            </div>
+        </div>
+        <div class="form-information">
+            <div class="form-information-childs">
+
+
+                <form class="form">
+
+
+                    <h2>Tipo De Documento</h2>
+
+                    <label>
+                        <i class='bx bxs-user-account'></i>
+                        <select id="tipoDoc">
+                            <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>
+                            <option value="Tarjeta de Identidad">Tarjeta de Identidad</option>
+                            <option value="Cedula">Cedula</option>
+                        </select>
+                    </label>
+
+                    <input type="submit" value="Buscar">
+                </form>
+                <form class="form">
+
+
+                    <h2>Documento</h2>
+
+                    <label>
+
+                        <i class='bx bxs-id-card'></i>
+                        <input type="text" placeholder="Documento">
+
+
+                    </label>
+
+
+                </form>
+                <form class="form">
+
+
+                    <h2>Fecha Registro</h2>
+
+                    <label>
+                        <i class='bx bx-calendar'></i>
+                        <input type="date" placeholder="Fecha Nacimiento">
+                    </label>
+
+
+                </form>
+
+
+
+
+            </div>
+            <div class="form-information-children">
+                <section>
+                    <!--for demo wrap-->
+
+                    <div class="tbl-header">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <thead>
+                                <tr>
+                                    <th>Tipo ID</th>
+                                    <th>Documento</th>
+                                    <th>Fecha</th>
+                                    <th>Acción</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tbl-content">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>modificar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>modificar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>10/11/23</td>
+                                    <td>crear</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>modificar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>borrar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>borrar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>17/11/23</td>
+                                    <td>modificar</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Cédula</td>
+                                    <td>1003239160 </td>
+                                    <td>12/11/23</td>
+                                    <td>crear</td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </section>
+
+            </div>
+            <div class="info-childs">
+                <input type="button" value="Borrar" id="delete-añadir">
+            </div>
+        </div>
+
+
+        <script src="script.js"></script>
+     </div>
+
+
+</body>
+
+</html>

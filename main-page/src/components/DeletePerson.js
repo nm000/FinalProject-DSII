@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
+import del from '../styles/style.module.css';
+import { Link } from 'react-router-dom';
 
 export const DeletePerson = () => {
 
@@ -21,21 +23,44 @@ export const DeletePerson = () => {
         }          
     
     // El HTML solo tiene el input para la ID 
-    return <div className='container'>
-                <form>
-                
-                <div>
-                <label htmlFor="nroDocumento">Nro. Documento:</label>
-                <input
-                    type="text"
-                    id="nroDocumento"
-                    name="nroDocumento"
-                    onChange={e => setnumDocumento(e.target.value)}
-                />
-                </div>
-
-                <button type="submit"onClick={submit}>Submit</button>
-
-                </form>
-            </div>
+    return <div className={del.containerform}>
+    <div className={del.information}>
+      <div className={del.infochilds}>
+        <h2>Bienvenido</h2>
+        <p>¿Quieres hacer algo más con tu información?</p>
+        <Link to="/create" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Añadir" />
+        </Link>
+        <Link to="/search" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Modificar" />
+        </Link>
+      </div>
+    </div>
+    <div className={del.forminformation}>
+      <div className={del.forminformationchilds}>
+        <h2>Borrar datos</h2>
+        <div className={del.icons}>
+          <a href="/select">
+            <box-icon type='solid' name='a'></box-icon>
+          </a>
+          <a href="/select">
+            <i className='bx bx-search'></i>
+          </a>
+        </div>
+        <p>o consultar tu información</p>
+        <form className={del.form}>
+          <label>
+            <i className='bx bxs-id-card'></i>
+            <input
+              type="text"
+              name="nroDocumento"
+              id="nroDocumento" placeholder="Número De Documento"
+              onChange={(e) => setnumDocumento(e.target.value)}
+            />
+          </label>
+          <input type="submit" value="Borrar"onClick={submit} />
+        </form>
+      </div>
+    </div>
+  </div>
 }
