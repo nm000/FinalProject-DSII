@@ -93,9 +93,7 @@ export const SelectPerson = () => {
                         />
                     </label>
                     <form className={styleShow.form}>
-                        <Link to="/select" style={{ textDecoration: 'none' }}>
-                            <input type="button" defaultValue="Mostrar" />
-                        </Link>
+                        <button type="submit" onClick={submit}>mostrar</button>
                         <Link to="/" style={{ textDecoration: 'none' }}>
                             <input type="button" defaultValue="Volver al inicio" />
                         </Link>
@@ -203,9 +201,9 @@ export const SelectPerson = () => {
                     </p>
                     <form className={styleShow.form}>
                         <Link to="/select" style={{ textDecoration: 'none' }}>
-                            <input type="button" defaultValue="Mostrar" />
+                            <input type="button" defaultValue="Volver a buscar" />
                         </Link>
-                        <Link to="/select" style={{ textDecoration: 'none' }}>
+                        <Link to="/" style={{ textDecoration: 'none' }}>
                             <input type="button" defaultValue="Volver al inicio" />
                         </Link>
                     </form>
