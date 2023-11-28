@@ -2,10 +2,10 @@ import {Prin} from "./components/pag_principal";
 import {CreatePerson} from "./components/CreatePerson";
 import {DeletePerson} from "./components/DeletePerson";
 
-import {SearchPerson} from "./components/SearchPerson";
+import {SearchPerson} from "./components/SearchUpdate";
 import {UpdatePerson} from "./components/UpdatePerson";
 
-import {SearchPersonSelect} from "./components/Select_1";
+import {SearchPersonSelect} from "./components/SearchSelect";
 import {SelectPerson} from "./components/SelectPerson";
 
 import {LogConsole} from "./components/SelectLog";

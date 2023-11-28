@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Style from '../styles/style.module.css';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
 function validarFormatoFecha(fecha) {
   // Define una expresión regular para el formato "dd-mm-aaaa"
   const formatoFecha = /^(\d{2})-(\d{2})-(\d{4})$/;
@@ -92,7 +93,7 @@ export const CreatePerson = () => {
 
     // Envío del método POST para realizar el CREATE con los datos
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
             if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
@@ -100,7 +101,7 @@ export const CreatePerson = () => {
                 if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                   if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
                     if (validarCorreoElectronico(correoElectronico)) {
-                      if (typeof celular === "number" && celular.toString().length === 10) {
+                      if (typeof celular === "number" && celular.toString().length === 10  && !isNaN(celular) && celular >= 0) {
                         if (selectedFile != null) {
                           const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
@@ -316,6 +317,7 @@ export const CreatePerson = () => {
                 id="numDocumento"
                 name="numDocumento" placeholder="Documento"
                 onChange={(e) => setnumDocumento(parseInt(e.target.value))}
+                min="0"
               />
             </label>
             <label>

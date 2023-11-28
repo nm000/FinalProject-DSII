@@ -55,7 +55,7 @@ export const Prin = () => {
                 </div>
                 <ul>
                     <li><a onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >Crear</a></li>
-                    <li><a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8000', '8003'] }])} >Modificar</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >Modificar</a></li>
                     <li><a onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >Borrar</a></li>
                 </ul>
             </div>

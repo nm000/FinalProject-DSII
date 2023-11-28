@@ -1,6 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Log from '../styles/LogStyle.module.css';
+import Modal from 'react-modal';
+import Swal from 'sweetalert2';
+
+function validarFormatoFecha(fecha) {
+  // Define una expresión regular para el formato "dd-mm-aaaa"
+  const formatoFecha = /^(\d{2})-(\d{2})-(\d{4})$/;
+
+  // Comprueba si la fecha coincide con el formato
+  if (!formatoFecha.test(fecha)) {
+    return false; // La fecha no cumple con el formato
+  }
+
+  // Extrae los componentes de la fecha
+  const [, dia, mes, anio] = fecha.match(formatoFecha);
+
+  // Convierte los componentes a números enteros
+  const diaNumero = parseInt(dia, 10);
+  const mesNumero = parseInt(mes, 10);
+  const anioNumero = parseInt(anio, 10);
+
+  // Valida que los componentes sean válidos
+  if (
+    diaNumero < 1 || diaNumero > 31 ||
+    mesNumero < 1 || mesNumero > 12 ||
+    anioNumero < 1900 // Puedes ajustar el año mínimo según tus necesidades
+  ) {
+    return false; // La fecha no es válida
+  }
+
+  // Puedes realizar validaciones adicionales según tus requisitos
+
+  // La fecha cumple con el formato y es válida
+  return true;
+}
 
 export const LogConsole = () => {
 
@@ -13,30 +47,57 @@ export const LogConsole = () => {
   // Inicializar variable que contendrá todos los datos de la persona
   const [logs, setLogs] = useState({});
 
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+
+  const openModal = (log) => {
+    setSelectedLog(log);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedLog(null);
+    setModalIsOpen(false);
+  };
+
   const submit = async e => {
 
     e.preventDefault();
     // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
-    try {
+    console.log(numDoc, tipoDoc, fecha, !isNaN(numDoc))
+    if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula' || tipoDoc === '') {
+      if ((typeof numDoc === "number" && numDoc.toString().length <= 10 && numDoc >= 0) || numDoc == '' || isNaN(numDoc)) {
+        try {
+          // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
 
-      // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
-      const response = await fetch(`http://localhost:8004/log?tipoDoc=${tipoDoc}&numDoc=${numDoc}&fecha=${fecha}`);
+          const response = await fetch(`http://localhost:8004/log?tipoDoc=${tipoDoc}&numDoc=${numDoc}&fecha=${fecha}`);
 
-      if (response.ok) {
-        const logData = await response.json();
+          if (response.ok) {
+            const logData = await response.json();
 
-        // colocar en personaData todos los datos de la persona
-        setLogs(logData);
-
-        console.log(logs)
-
+            // colocar en personaData todos los datos de la persona
+            setLogs(logData);
+            console.log(logData)
+          } else {
+            console.error('Error en la solicitud HTTP');
+          }
+        } catch (error) {
+          console.error('Ocurrió un error:', error);
+        }
       } else {
-        console.error('Error en la solicitud HTTP');
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        });
       }
-    } catch (error) {
-      console.error('Ocurrió un error:', error);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Digite un tipo de documento válido"
+      });
     }
-
   }
 
   useEffect(() => {
@@ -48,7 +109,7 @@ export const LogConsole = () => {
   return (
     <div>
       <div className={Log.img}></div>
-      <div className={Log.containerformlog}>
+      <div className={Log.containerformlog} style={{ zIndex: 1 }}>
         <div className={Log.informationlog}>
           <div className={Log.infochildslog}>
             <h2>CONSULTA DE REGISTRO</h2>
@@ -93,6 +154,8 @@ export const LogConsole = () => {
                     const inputDate = e.target.value;
                     setfecha(inputDate);
                   }}
+                  max={(new Date()).toISOString().split('T')[0]}
+                  min="1900-01-01"
                 />
               </label>
             </form>
@@ -118,7 +181,12 @@ export const LogConsole = () => {
                     <tbody>
                       {logs.map((log) => (
                         <tr key={log.idLog}>
-                          <td>{log.idLog}</td>
+                          <td>
+                            {log.idLog}
+                            <Link to="#" onClick={() => openModal(log)} style={{ marginLeft: '5px' }}>
+                              <i className='bx bx-search'></i>
+                            </Link>
+                          </td>
                           <td>{log.tipoDocumentoPersona}</td>
                           <td>{log.documentoPersona}</td>
                           <td>{log.dateLog}</td>
@@ -127,6 +195,33 @@ export const LogConsole = () => {
                       ))}
                     </tbody>
                   </table>
+                  <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Example Modal"
+                    style={{
+                      overlay: {
+                        zIndex: 2, // Asegúrate de que el zIndex del overlay sea mayor que el del formulario
+                      },
+                      content: {
+                        zIndex: 2, // Asegúrate de que el zIndex del contenido del modal sea mayor que el del formulario
+                      },
+                    }}
+                  >
+                    {selectedLog && (
+                      <div>
+                        <h2>ID: {selectedLog.idLog}</h2>
+                        <p>Tipo de Documento: {selectedLog.tipoDocumentoPersona}</p>
+                        <p>Documento: {selectedLog.documentoPersona}</p>
+                        <p>Fecha: {selectedLog.dateLog}</p>
+                        <p>Acción: {selectedLog.accionLog}</p>
+                        <p>Valor: {selectedLog.valorLog}</p>
+                        <p>Cambios antes: {selectedLog.cambiosAntes}</p>
+                        <p>Cambios después: {selectedLog.cambiosDespues}</p>
+                      </div>
+                    )}
+                    <button onClick={closeModal}>Cerrar</button>
+                  </Modal>
                 </div>
               ) : (
                 <p>Cargando datos...</p>

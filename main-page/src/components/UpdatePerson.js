@@ -91,6 +91,8 @@ export const UpdatePerson = () => {
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [celular, setCelular] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile2, setSelectedFile2] = useState(null);
+  const [FotoDisplay, setFotoDisplay] = useState(null);
 
   // Inicializar variable que contendrá todos los datos de la persona
   const [personaData, setPersonaData] = useState({});
@@ -108,7 +110,7 @@ export const UpdatePerson = () => {
     try {
 
       // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
-      const persona = await fetch(`http://localhost:8000/persona/${datos}`);
+      const persona = await fetch(`http://localhost:8003/persona/${datos}`);
 
       if (persona.ok) {
         const personaData = await persona.json();
@@ -127,7 +129,9 @@ export const UpdatePerson = () => {
         setCorreoElectronico(personaData.correoElectronico);
         setCelular(personaData.celular);
         setSelectedFile(personaData.foto);
+        setFotoDisplay(personaData.foto);
 
+        console.log(personaData.foto)
       } else {
         console.error('Error en la solicitud HTTP');
       }
@@ -152,7 +156,7 @@ export const UpdatePerson = () => {
     // Envío del método POST para realizar el CREATE con los datos
     console.log(selectedFile)
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
             if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
@@ -160,10 +164,10 @@ export const UpdatePerson = () => {
                 if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                   if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
                     if (validarCorreoElectronico(correoElectronico)) {
-                      if (typeof celular === "number" && celular.toString().length === 10) {
-                        if (selectedFile != null) {
+                      if (typeof celular === "number" && celular.toString().length === 10 && !isNaN(celular) && celular >= 0) {
+                        if (selectedFile2 != null) {
                           const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
-                          
+
                           const reader = new FileReader();
 
                           reader.onload = async function () {
@@ -194,7 +198,7 @@ export const UpdatePerson = () => {
 
                               Swal.fire({
                                 title: "¡Bien hecho!",
-                                text: "¡Te has registrado exitosamente!",
+                                text: "¡Se ha actualizado exitosamente!",
                                 icon: "success"
                               });
 
@@ -206,21 +210,54 @@ export const UpdatePerson = () => {
                                 text: "Hubo un error del lado del servidor"
                               });
                             }
-
-                            // Esto lo único que hace es que retrocede uno a la página
-                            // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
-                          };
+                          }
 
                           // Lee el contenido de la imagen como base64
                           reader.readAsDataURL(fileInput.files[0]);
-
+                          // Esto lo único que hace es que retrocede uno a la página
+                          // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
                         } else {
-                          Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Escoja una foto"
-                          });
-                        }
+                          // falta la foto
+                          try {
+                            const foto = personaData.foto
+
+                            // falta la foto
+                            const response = await fetch(`http://localhost:8003/${datos}`, {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                tipoDocumento,
+                                primerNombre,
+                                segundoNombre,
+                                apellidos,
+                                fechaNacimiento,
+                                genero,
+                                correoElectronico,
+                                celular,
+                                foto
+                              }),
+                            });
+
+                            // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
+                            if (!response.ok) {
+                              throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                            }
+
+                            Swal.fire({
+                              title: "¡Bien hecho!",
+                              text: "¡Se ha actualizado exitosamente!",
+                              icon: "success"
+                            });
+
+                          } catch (error) {
+                            // Aquí manejas cualquier error que ocurra durante la solicitud
+                            Swal.fire({
+                              icon: "error",
+                              title: "Lo sentimos...",
+                              text: "Hubo un error del lado del servidor"
+                            });
+                          }
+                        };
                       } else {
                         Swal.fire({
                           icon: "error",
@@ -310,7 +347,7 @@ export const UpdatePerson = () => {
         });
         // Limpiar el campo de entrada de archivos
         e.target.value = null;
-        setSelectedFile(null);
+        setSelectedFile2(null);
         return;
       }
 
@@ -324,12 +361,25 @@ export const UpdatePerson = () => {
         });
         // Limpiar el campo de entrada de archivos
         e.target.value = null;
-        setSelectedFile(null);
+        setSelectedFile2(null);
         return;
       }
 
-      // Si pasó las validaciones, puedes hacer algo con el archivo, como almacenarlo en el estado
-      setSelectedFile(file);
+      const reader = new FileReader();
+
+      reader.onload = async function () {
+
+        const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
+
+        setFotoDisplay(foto)
+
+      }
+
+      // Lee el contenido de la imagen como base64
+      reader.readAsDataURL(file);
+
+
+      setSelectedFile2(file);
     }
   };
 
@@ -339,6 +389,13 @@ export const UpdatePerson = () => {
     <div className={mod.information}>
       <div className={mod.infochilds}>
         <h2>Bienvenido</h2>
+        <div>
+          <img
+            src={`data:image/png;base64,${FotoDisplay}`}
+            alt="Foto de la persona"
+            style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '20%', objectFit: 'cover' }}
+          />
+        </div>
         <p>¿Quieres hacer algo más con tu información?</p>
         <Link to="/create" style={{ textDecoration: 'none' }}>
           <input type="button" value="Añadir" />
@@ -430,7 +487,7 @@ export const UpdatePerson = () => {
                   .join('-');
                 setFechaNacimiento(formattedDate);
               }}
-              
+
               max={(new Date()).toISOString().split('T')[0]}
               min="1900-01-01"
               value={fechaNacimiento ? formatearFechaVisual(fechaNacimiento) : ""}
@@ -474,13 +531,15 @@ export const UpdatePerson = () => {
 
           <label>
             <i className='bx bxs-user-rectangle'></i>
-            <input
-              type="file"
-              id="foto"
-              name="foto"
-              onChange={handleFileChange}
-            />
-            {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
+            <div>
+              <input
+                type="file"
+                id="foto"
+                name="foto"
+                onChange={handleFileChange}
+              />
+            </div>
+            {selectedFile2 && <p>Archivo seleccionado: {selectedFile2.name}</p>}
           </label>
 
           <input type="submit" value="Aceptar" onClick={submit} />

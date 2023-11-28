@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import del from '../styles/style.module.css';
+import { useNavigate } from 'react-router-dom';
+import Search from '../styles/style.module.css';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-export const DeletePerson = () => {
+export const SearchPersonSelect = () => {
 
+  // Acá solo se usa el num de documento
+  // Esta página solo muestra un input para el documento, que se envía después a la página de update
   const [numDocumento, setnumDocumento] = useState(0);
+  const navigate = useNavigate();
 
   const submit = async e => {
 
-    // Esto va siempre
     e.preventDefault();
-
-    // Se envía la solicitud DELETE al microservicio, enviando el num. de identificación mediante la URL
+    // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
+    // Redirecciona hacia la página update de la siguiente forma. Agrega el num de documento del formulario a la URL de la página
     if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
       try {
-        const response = await fetch(`http://localhost:8001/persona/${numDocumento}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await fetch(`http://localhost:8000/persona/${numDocumento}`);
       
         if (!response.ok) {
           // Si el código de estado no es OK, lanzar una excepción
@@ -26,7 +26,7 @@ export const DeletePerson = () => {
         }
       
         // Si la respuesta es OK, el registro se eliminó correctamente
-        console.log('Registro eliminado correctamente');
+        navigate(`/persona?datos=${numDocumento}`);
       } catch (error) {
         // Manejar errores, mostrar mensaje de alerta si es un error 404
         if (error.message.includes('404')) {
@@ -46,49 +46,47 @@ export const DeletePerson = () => {
         text: "Digite un tipo de documento válido"
       });
     }
-
-    // Esto lo único que hace es que retrocede uno a la página
-    // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones
   }
 
-  // El HTML solo tiene el input para la ID 
-  return <div className={del.containerform}>
-    <div className={del.information}>
-      <div className={del.infochilds}>
+  // Solo un HTML para el input del num de documento
+  return <div className={Search.containerform}>
+    <div className={Search.information}>
+      <div className={Search.infochilds}>
         <h2>Bienvenido</h2>
         <p>¿Quieres hacer algo más con tu información?</p>
         <Link to="/create" style={{ textDecoration: 'none' }}>
           <input type="button" value="Añadir" />
         </Link>
-        <Link to="/search" style={{ textDecoration: 'none' }}>
-          <input type="button" value="Modificar" />
+        <Link to="/delete" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Borrar" />
         </Link>
       </div>
     </div>
-    <div className={del.forminformation}>
-      <div className={del.forminformationchilds}>
-        <h2>Borrar datos</h2>
-        <div className={del.icons}>
+    <div className={Search.forminformation}>
+      <div className={Search.forminformationchilds}>
+        <h2>Ingrese Documento para consultar</h2>
+        <div className={Search.icons}>
           <a href="/select">
             <box-icon type='solid' name='a'></box-icon>
           </a>
           <a href="/select">
-            <i className='bx bx-search'></i>
+            <i class='bx bx-search'></i>
           </a>
         </div>
         <p>o consultar tu información</p>
-        <form className={del.form}>
+        <form className={Search.form}>
           <label>
-            <i className='bx bxs-id-card'></i>
+            <i class='bx bxs-id-card'></i>
             <input
               type="number"
-              name="nroDocumento"
-              id="nroDocumento" placeholder="Número De Documento"
+              placeholder="Documento"
               onChange={(e) => setnumDocumento(parseInt(e.target.value))}
               min="0"
             />
           </label>
-          <input type="submit" value="Borrar" onClick={submit} />
+          <Link to="/update" style={{ textDecoration: 'none' }}>
+            <input type="submit" value="Buscar" id="Buscar" onClick={submit} />
+          </Link>
         </form>
       </div>
     </div>
