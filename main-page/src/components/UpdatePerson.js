@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import mod from '../styles/style.module.css';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -72,6 +71,11 @@ function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
     return true;
   }
 }
+
+const formatearFechaVisual = (fecha) => {
+  const [dia, mes, anio] = fecha.split('-');
+  return `${anio}-${mes}-${dia}`;
+};
 
 
 export const UpdatePerson = () => {
@@ -361,7 +365,7 @@ export const UpdatePerson = () => {
           <label >
             <i className='bx bxs-user-account'></i>
             <select
-              id="tipoDocumento" name="tipoDocumento" onChange={(e) => setTipoDocumento(e.target.value)}
+              id="tipoDocumento" name="tipoDocumento" onChange={(e) => setTipoDocumento(e.target.value)} value={tipoDocumento}
             >
               <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
               <option value="Tarjeta de identidad">Tarjeta de identidad</option>
@@ -426,9 +430,10 @@ export const UpdatePerson = () => {
                   .join('-');
                 setFechaNacimiento(formattedDate);
               }}
-
+              
               max={(new Date()).toISOString().split('T')[0]}
               min="1900-01-01"
+              value={fechaNacimiento ? formatearFechaVisual(fechaNacimiento) : ""}
             />
           </label>
           <label >
@@ -437,8 +442,9 @@ export const UpdatePerson = () => {
               id="genero"
               name="genero"
               onChange={(e) => setGenero(e.target.value)}
+              value={genero}
             >
-              <option value="Seleccione su género">Seleccione su genero</option>"
+              <option value="Seleccione su género">Seleccione su género</option>"
               <option value="Masculino">Masculino</option>
               <option value="Femenino">Femenino</option>
               <option value="No binario">No binario</option>
@@ -472,7 +478,6 @@ export const UpdatePerson = () => {
               type="file"
               id="foto"
               name="foto"
-              defaultValue={personaData.foto}
               onChange={handleFileChange}
             />
             {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}

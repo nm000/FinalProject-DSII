@@ -86,6 +86,9 @@ def read_logs(
     db: Session = Depends(get_db)
 ):
     query = db.query(Log)
+    
+    if numDoc == 'NaN':
+        numDoc = ''
 
     if tipoDoc:
         query = query.filter(Log.tipoDocumentoPersona == tipoDoc)
