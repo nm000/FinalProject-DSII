@@ -11,6 +11,45 @@ export const SearchPerson = () => {
     const [numDocumento, setnumDocumento] = useState(0);
     const navigate = useNavigate();
 
+
+    async function validateMicroservice(microservices) {
+      try {
+        for (const { endpoint, ports } of microservices) {
+          for (const port of ports) {
+            const response = await fetch(`http://localhost:${port}/disp`, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            });
+  
+            if (!response.ok) {
+              throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+            }
+  
+            const repuesta = await response.json();
+  
+            if (!repuesta.disponibilidad) {
+              Swal.fire({
+                icon: "error",
+                title: "Lo sentimos...",
+                text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+              });
+              return;  // Salir de la función si un microservicio no está disponible
+            }
+          }
+        }
+  
+        // Si todos los microservicios están disponibles, redirige a la página correspondiente
+        navigate(`/${microservices[0].endpoint}`);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Lo sentimos...",
+          text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+        });
+      }
+    }
+
+    
     const submit = async e => {
 
         e.preventDefault();
@@ -55,10 +94,10 @@ export const SearchPerson = () => {
       <div className={Search.infochilds}>
         <h2>Bienvenido</h2>
         <p>¿Quieres hacer algo más con tu información?</p>
-        <Link to="/create" style={{ textDecoration: 'none' }}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >
           <input type="button" value="Añadir" />
         </Link>
-        <Link to="/delete" style={{ textDecoration: 'none' }}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])}>
           <input type="button" value="Borrar" />
         </Link>
       </div>
@@ -67,10 +106,10 @@ export const SearchPerson = () => {
       <div className={Search.forminformationchilds}>
         <h2>Ingrese Documento para modificar</h2>
         <div className={Search.icons}>
-          <a href="/select">
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <box-icon type='solid' name='a'></box-icon>
           </a>
-          <a href="/select">
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <i class='bx bx-search'></i>
           </a>
         </div>

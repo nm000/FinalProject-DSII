@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import mod from '../styles/style.module.css';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -100,7 +101,7 @@ export const UpdatePerson = () => {
   // Obtener la URL de la página
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-
+  const navigate = useNavigate();
   // En este punto, en la URL habrá como http://localhost:3000/update?datos=97544527
   // Esta función obtiene lo que sea que va después de datos= 
   const datos = urlParams.get('datos'); // Obtiene la IDENTIFICACIÓN desde la URL
@@ -145,7 +146,42 @@ export const UpdatePerson = () => {
     getPersonaData();
   }, []);
 
+  async function validateMicroservice(microservices) {
+    try {
+      for (const { endpoint, ports } of microservices) {
+        for (const port of ports) {
+          const response = await fetch(`http://localhost:${port}/disp`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
 
+          if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+          }
+
+          const repuesta = await response.json();
+
+          if (!repuesta.disponibilidad) {
+            Swal.fire({
+              icon: "error",
+              title: "Lo sentimos...",
+              text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+            });
+            return;  // Salir de la función si un microservicio no está disponible
+          }
+        }
+      }
+
+      // Si todos los microservicios están disponibles, redirige a la página correspondiente
+      navigate(`/${microservices[0].endpoint}`);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Lo sentimos...",
+        text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+      });
+    }
+  }
 
   async function submit(e) {
 
@@ -156,7 +192,7 @@ export const UpdatePerson = () => {
     // Envío del método POST para realizar el CREATE con los datos
     console.log(selectedFile)
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
             if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
@@ -397,10 +433,10 @@ export const UpdatePerson = () => {
           />
         </div>
         <p>¿Quieres hacer algo más con tu información?</p>
-        <Link to="/create" style={{ textDecoration: 'none' }}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >
           <input type="button" value="Añadir" />
         </Link>
-        <Link to="/delete" style={{ textDecoration: 'none' }}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
           <input type="button" value="Borrar" />
         </Link>
       </div>
@@ -409,10 +445,10 @@ export const UpdatePerson = () => {
       <div className={mod.forminformationchilds}>
         <h2>Modificar Información</h2>
         <div className={mod.icons}>
-          <a href="/select">
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <box-icon type='solid' name='a'></box-icon>
           </a>
-          <a href="/select">
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <i className='bx bx-search'></i>
           </a>
         </div>

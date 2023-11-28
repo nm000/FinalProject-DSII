@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Style from '../styles/style.module.css';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 function validarFormatoFecha(fecha) {
   // Define una expresión regular para el formato "dd-mm-aaaa"
@@ -86,6 +87,44 @@ export const CreatePerson = () => {
   const [celular, setCelular] = useState(0);
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const navigate = useNavigate();
+  async function validateMicroservice(microservices) {
+    try {
+      for (const { endpoint, ports } of microservices) {
+        for (const port of ports) {
+          const response = await fetch(`http://localhost:${port}/disp`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+          }
+
+          const repuesta = await response.json();
+
+          if (!repuesta.disponibilidad) {
+            Swal.fire({
+              icon: "error",
+              title: "Lo sentimos...",
+              text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+            });
+            return;  // Salir de la función si un microservicio no está disponible
+          }
+        }
+      }
+
+      // Si todos los microservicios están disponibles, redirige a la página correspondiente
+      navigate(`/${microservices[0].endpoint}`);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Lo sentimos...",
+        text: `Este servicio no está disponible actualmente. Inténtalo más tarde`,
+      });
+    }
+  }
+
   async function submit(e) {
 
     // Siempre va
@@ -93,7 +132,7 @@ export const CreatePerson = () => {
 
     // Envío del método POST para realizar el CREATE con los datos
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
             if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
@@ -279,10 +318,10 @@ export const CreatePerson = () => {
         <div className={Style.infochilds}>
           <h2>Bienvenido</h2>
           <p>Para continuar, por favor añade los datos solicitados</p>
-          <Link to="/search" style={{ textDecoration: 'none' }}>
+          <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >
             <input type="button" value="Modificar" />
           </Link>
-          <Link to="/delete" style={{ textDecoration: 'none' }}>
+          <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
             <input type="button" value="Borrar" />
           </Link>
         </div>
@@ -291,10 +330,10 @@ export const CreatePerson = () => {
         <div className={Style.forminformationchilds}>
           <h2>Añadir Información</h2>
           <div className={Style.icons}>
-            <a href="/select">
+            <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])}>
               <box-icon type='solid' name='a'></box-icon>
             </a>
-            <a href="/select">
+            <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])}>
               <i className='bx bx-search'></i>
             </a>
           </div>
