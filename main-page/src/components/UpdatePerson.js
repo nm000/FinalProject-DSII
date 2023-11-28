@@ -164,6 +164,12 @@ export const UpdatePerson = () => {
                         if (selectedFile != null) {
                           const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
+                          fileInput.style.width = '200px';
+                          fileInput.style.height = '230px';
+                          fileInput.style.marginBottom = '10px';
+                          fileInput.style.borderRadius = '5%';
+                          fileInput.style.boxShadow = '5px 5px 10px rgba(0, 0, 0, .1)';
+                          
                           const reader = new FileReader();
 
                           reader.onload = async function () {
