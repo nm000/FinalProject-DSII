@@ -332,34 +332,34 @@ export const UpdatePerson = () => {
 
   // HTML DEL CÓDIGO
   return <div className={mod.containerform}>
-  <div className={mod.information}>
-    <div className={mod.infochilds}>
-      <h2>Bienvenido</h2>
-      <p>¿Quieres hacer algo más con tu información?</p>
-      <Link to="/create" style={{ textDecoration: 'none' }}>
-        <input type="button" value="Añadir" />
-      </Link>
-      <Link to="/delete" style={{ textDecoration: 'none' }}>
-        <input type="button" value="Borrar" />
-      </Link>
-    </div>
-  </div>
-  <div className={mod.forminformation}>
-    <div className={mod.forminformationchilds}>
-      <h2>Modificar Información</h2>
-      <div className={mod.icons}>
-        <a href="/select">
-          <box-icon type='solid' name='a'></box-icon>
-        </a>
-        <a href="/select">
-          <i className='bx bx-search'></i>
-        </a>
+    <div className={mod.information}>
+      <div className={mod.infochilds}>
+        <h2>Bienvenido</h2>
+        <p>¿Quieres hacer algo más con tu información?</p>
+        <Link to="/create" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Añadir" />
+        </Link>
+        <Link to="/delete" style={{ textDecoration: 'none' }}>
+          <input type="button" value="Borrar" />
+        </Link>
       </div>
-      <p>o consultar tu información</p>
+    </div>
+    <div className={mod.forminformation}>
+      <div className={mod.forminformationchilds}>
+        <h2>Modificar Información</h2>
+        <div className={mod.icons}>
+          <a href="/select">
+            <box-icon type='solid' name='a'></box-icon>
+          </a>
+          <a href="/select">
+            <i className='bx bx-search'></i>
+          </a>
+        </div>
+        <p>o consultar tu información</p>
 
-      <form className={mod.form}>
-      <label >
-          <i className='bx bxs-user-account'></i>
+        <form className={mod.form}>
+          <label >
+            <i className='bx bxs-user-account'></i>
             <select
               id="tipoDocumento" name="tipoDocumento" onChange={(e) => setTipoDocumento(e.target.value)}
             >
@@ -369,43 +369,46 @@ export const UpdatePerson = () => {
             </select>
           </label>
           <label>
-          <i className='bx bxs-id-card'></i>
-          <input
-       type="number"
-       id="nroDocumento"
-       name="nroDocumento"
-       placeholder={numDocumento} 
-       defaultValue={personaData.numDocumento}
-       onChange={e => setnumDocumento(parseInt(e.target.value))}
-       disabled
-     
+            <i className='bx bxs-id-card'></i>
+            <input
+              type="number"
+              id="nroDocumento"
+              name="nroDocumento"
+              placeholder={numDocumento}
+              defaultValue={personaData.numDocumento}
+              onChange={e => setnumDocumento(parseInt(e.target.value))}
+              disabled
+
             />
           </label>
           <label>
-          <i className='bx bx-street-view'></i>
+            <i className='bx bx-street-view'></i>
             <input
               type="text"
               id="primerNombre"
-              name="primerNombre" placeholder="Primer nombre" 
+              name="primerNombre" placeholder="Primer nombre"
+              defaultValue={personaData.primerNombre}
               onChange={(e) => setPrimerNombre(e.target.value)}
             />
           </label>
           <label>
-          <i className='bx bx-street-view'></i>
+            <i className='bx bx-street-view'></i>
             <input
               type="text"
               id="segundoNombre"
               name="segundoNombre" placeholder="Segundo nombre"
+              defaultValue={personaData.segundoNombre}
               onChange={(e) => setSegundoNombre(e.target.value)}
             />
           </label>
           <label >
-          <i className='bx bx-user'></i>
+            <i className='bx bx-user'></i>
             <input
-            
+
               type="text"
               id="apellidos"
-              name="apellidos" placeholder="Apellidos" 
+              name="apellidos" placeholder="Apellidos"
+              defaultValue={personaData.apellidos}
               onChange={(e) => setApellidos(e.target.value)}
             />
           </label>
@@ -413,7 +416,7 @@ export const UpdatePerson = () => {
             <input
               type="date"
               id="fechaNacimiento"
-              name="fechaNacimiento" placeholder="dd-mm-aaaa"
+              name="fechaNacimiento" placeholder="Fecha Nacimiento"
               pattern="\d{2}-\d{2}-\d{4}"
               onChange={(e) => {
                 const inputDate = e.target.value;
@@ -429,13 +432,13 @@ export const UpdatePerson = () => {
             />
           </label>
           <label >
-          <i className='bx bx-male-female'></i>
+            <i className='bx bx-male-female'></i>
             <select
               id="genero"
               name="genero"
               onChange={(e) => setGenero(e.target.value)}
             >
-              <option value="Seleccione su genero">Seleccione su genero</option>"
+              <option value="Seleccione su género">Seleccione su genero</option>"
               <option value="Masculino">Masculino</option>
               <option value="Femenino">Femenino</option>
               <option value="No binario">No binario</option>
@@ -443,39 +446,41 @@ export const UpdatePerson = () => {
             </select>
           </label>
           <label >
-          <i className='bx bx-envelope'></i>
+            <i className='bx bx-envelope'></i>
             <input
               type="email"
               id="correoElectronico"
-              name="correoElectronico" placeholder="Correo Electronico"
+              name="correoElectronico" placeholder="Correo Electrónico"
               onChange={(e) => setCorreoElectronico(e.target.value)}
+              defaultValue={personaData.correoElectronico}
             /></label>
 
           <label >
-          <i className='bx bx-phone'></i>
+            <i className='bx bx-phone'></i>
             <input
               type="number"
               id="celular"
               name="celular"
               placeholder="Num Celular"
               onChange={(e) => setCelular(parseInt(e.target.value))}
+              defaultValue={personaData.celular}
             /></label>
-  
-        <label>
-          <i className='bx bxs-user-rectangle'></i>
-          <input
-            type="file"
-            id="foto"
-            name="foto"
-            defaultValue={personaData.foto}
-            onChange={handleFileChange}
-          />
-          {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
-        </label>
 
-        <input type="submit" value="Aceptar" onClick={submit}/>
-      </form>
+          <label>
+            <i className='bx bxs-user-rectangle'></i>
+            <input
+              type="file"
+              id="foto"
+              name="foto"
+              defaultValue={personaData.foto}
+              onChange={handleFileChange}
+            />
+            {selectedFile && <p>Archivo seleccionado: {selectedFile.name}</p>}
+          </label>
+
+          <input type="submit" value="Aceptar" onClick={submit} />
+        </form>
+      </div>
     </div>
   </div>
-</div>
 } 

@@ -8,7 +8,7 @@ from sqlalchemy import BigInteger
 from sqlalchemy.orm import Session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
@@ -106,6 +106,7 @@ class PersonaPydantic(BaseModel):
 def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
     # Crear la persona
     db_persona = Persona(**persona.dict())  # Crea una instancia de Persona
+    print(db_persona.celular)
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
