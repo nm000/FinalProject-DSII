@@ -94,6 +94,25 @@
     color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
   }
+
+.form button {
+    background-color: transparent;
+    outline: none;
+    border: solid 2px #9191bd;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: #9191bd;
+    cursor: pointer;
+    transition: background-color .3s ease;
+    margin-left: 10px;
+  }
+  
+  .form button:hover {
+    background-color: #9191bd;
+    border: none;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+  }
   
   .forminformation {
     overflow: hidden;
