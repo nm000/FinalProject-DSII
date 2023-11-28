@@ -14,6 +14,7 @@ from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
 from datetime import datetime
 import base64
+import pytz
 
 app = FastAPI()
 
@@ -109,9 +110,9 @@ def create(persona: PersonaPydantic, db: Session = Depends(get_db)):
     db.add(db_persona)
     db.commit()
     db.refresh(db_persona)
-    
-    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    colombia_timezone = pytz.timezone('America/Bogota')
 
+    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
     # Crear un log del CREATE
     db_log = CreateLog(
         

@@ -13,8 +13,7 @@ from pydantic import BaseModel  # Importa BaseModel de Pydantic
 
 from datetime import datetime
 import copy
-
-
+import pytz
 
 app = FastAPI()
 
@@ -106,6 +105,20 @@ class Persona(Base):
             cambios_despues += 'foto: Cambiada\n'
 
         return cambios_antes, cambios_despues
+    
+    def to_json(self):
+        return {
+            'numDocumento': self.numDocumento,
+            'tipoDocumento': self.tipoDocumento,
+            'primerNombre': self.primerNombre,
+            'segundoNombre': self.segundoNombre,
+            'apellidos': self.apellidos,
+            'fechaNacimiento': self.fechaNacimiento,
+            'genero': self.genero,
+            'correoElectronico': self.correoElectronico,
+            'celular': self.celular,
+            'foto': self.foto 
+        }
 
 # Define un modelo Pydantic que coincida con la clase SQLAlchemy Persona
 class PersonaPydantic(BaseModel):
@@ -152,13 +165,16 @@ def update(nro_documento: int, persona: PersonaPydantic, db: Session = Depends(g
     db.commit()
     db.refresh(db_persona)
 
-    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    colombia_timezone = pytz.timezone('America/Bogota')
+
+    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
+    
     cambios_antes, cambios_despues = db_persona.compare(persona_antes)
 
     db_log = CreateLog(
         
         dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
-        accionLog="UPDATE",
+        accionLog="ACTUALIZAR",
         documentoPersona= db_persona.numDocumento,
         tipoDocumentoPersona= db_persona.tipoDocumento,  # Proporciona el valor deseado
         valorLog=f"Se modificó a la persona con id {db_persona.numDocumento} el {fecha_act}" , # Proporciona el valor deseado
@@ -171,6 +187,31 @@ def update(nro_documento: int, persona: PersonaPydantic, db: Session = Depends(g
     db.refresh(db_log)
 
     return PersonaPydantic.from_orm(db_persona)
+
+@app.get('/persona/{pk}')
+def read(pk: int, db: Session = Depends(get_db)):
+    # Intenta cargar la persona desde la base de datos
+    persona = db.query(Persona).filter(Persona.numDocumento == pk).first()
+
+    if persona is None:
+        raise HTTPException(status_code=404, detail="La persona no se encontró")
+
+    # Devuelve a la persona de la base de datos
+    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db_log = CreateLog(
+        
+        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+        accionLog="READ",
+        documentoPersona= persona.numDocumento,
+        tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
+        valorLog=f"Se buscó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
+    )
+
+    db.add(db_log)
+    db.commit()
+    db.refresh(db_log)
+
+    return persona.to_json()
 
 @app.get("/disp")
 def mi_ruta(db: Session = Depends(get_db)):

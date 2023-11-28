@@ -64,18 +64,6 @@ class Log(Base):
     cambiosAntes = Column(Text)
     cambiosDespues = Column(Text)
 
-    def to_json(self):
-        return {
-            'idLog': self.numDocumento,
-            'dateLog': self.tipoDocumento,
-            'accionLog': self.primerNombre,
-            'documentoPersona': self.segundoNombre,
-            'tipoDocumentoPersona': self.apellidos,
-            'valorLog': self.fechaNacimiento,
-            'cambiosAntes': self.genero,
-            'cambiosDespues': self.correoElectronico,
-            }
-
 from fastapi import Query
 
 @app.get("/log")

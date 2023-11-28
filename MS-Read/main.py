@@ -12,6 +12,7 @@ from sqlalchemy.exc import OperationalError
 from datetime import datetime
 import json
 import base64
+import pytz
 
 app = FastAPI()
 
@@ -98,13 +99,14 @@ def read(pk: int, db: Session = Depends(get_db)):
 
     if persona is None:
         raise HTTPException(status_code=404, detail="La persona no se encontró")
+    
+    colombia_timezone = pytz.timezone('America/Bogota')
 
-    # Devuelve a la persona de la base de datos
-    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
     db_log = CreateLog(
         
         dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
-        accionLog="READ",
+        accionLog="BUSCAR",
         documentoPersona= persona.numDocumento,
         tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
         valorLog=f"Se buscó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado

@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 
 from datetime import datetime
+import pytz
 
 app = FastAPI()
 
@@ -88,12 +89,14 @@ def delete(pk: int, db: Session = Depends(get_db)):
     # Elimina la persona de la base de datos
     db.delete(persona)
     db.commit()
+    colombia_timezone = pytz.timezone('America/Bogota')
 
-    fecha_act = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
+
     db_log = CreateLog(
         
         dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
-        accionLog="DELETE",
+        accionLog="ELIMINAR",
         documentoPersona= persona.numDocumento,
         tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
         valorLog=f"Se eliminó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
