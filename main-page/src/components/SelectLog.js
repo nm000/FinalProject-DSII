@@ -72,7 +72,7 @@ export const LogConsole = () => {
     // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
     if (numDocumento_input === '' || contieneSoloNumeros(numDocumento_input)) {
       const numDoc = parseInt(numDocumento_input)
-      if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula' || tipoDoc === '') {
+      if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula de ciudadania' || tipoDoc === 'Cedula de extranjeria' || tipoDoc === '') {
         if ((typeof numDoc === "number" && numDoc.toString().length <= 10 && numDoc >= 0) || numDoc == '' || isNaN(numDoc)) {
           try {
             // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
@@ -139,7 +139,8 @@ export const LogConsole = () => {
                 >
                   <option value="">Seleccione el tipo de documento</option>"
                   <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-                  <option value="Cedula">Cédula</option>
+                  <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+                  <option value="Cedula de extranjeria">Cédula de extranjería</option>
                 </select>
               </label>
               <input type="submit" onClick={submit} value="Buscar" />
@@ -229,8 +230,8 @@ export const LogConsole = () => {
                         <p>Fecha: {selectedLog.dateLog}</p>
                         <p>Acción: {selectedLog.accionLog}</p>
                         <p>Valor: {selectedLog.valorLog}</p>
-                        <p>Cambios antes: {selectedLog.cambiosAntes}</p>
-                        <p>Cambios después: {selectedLog.cambiosDespues}</p>
+                        <p>Información antes: {selectedLog.cambiosAntes}</p>
+                        <p>Información después: {selectedLog.cambiosDespues}</p>
                       </div>
                     )}
                     <div className={Log.infochildslog}>

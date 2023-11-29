@@ -167,31 +167,33 @@ def update(nro_documento: int, persona: PersonaPydantic, db: Session = Depends(g
     for key, value in persona.dict().items():
         setattr(db_persona, key, value)
 
-    db.commit()
-    db.refresh(db_persona)
-
-    colombia_timezone = pytz.timezone('America/Bogota')
-
-    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
-    
     cambios_antes, cambios_despues = db_persona.compare(persona_antes)
+    if(cambios_antes != '' and cambios_despues != ''):
+        db.commit()
+        db.refresh(db_persona)
 
-    db_log = CreateLog(
-        
-        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
-        accionLog="ACTUALIZAR",
-        documentoPersona= db_persona.numDocumento,
-        tipoDocumentoPersona= db_persona.tipoDocumento,  # Proporciona el valor deseado
-        valorLog=f"Se modificó a la persona con id {db_persona.numDocumento} el {fecha_act}" , # Proporciona el valor deseado
-        cambiosAntes= cambios_antes,
-        cambiosDespues= cambios_despues
-    )
+        colombia_timezone = pytz.timezone('America/Bogota')
 
-    db.add(db_log)
-    db.commit()
-    db.refresh(db_log)
+        fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
 
-    return PersonaPydantic.from_orm(db_persona)
+        db_log = CreateLog(
+            
+            dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+            accionLog="ACTUALIZAR",
+            documentoPersona= db_persona.numDocumento,
+            tipoDocumentoPersona= db_persona.tipoDocumento,  # Proporciona el valor deseado
+            valorLog=f"Se modificó a la persona con id {db_persona.numDocumento} el {fecha_act}" , # Proporciona el valor deseado
+            cambiosAntes= cambios_antes,
+            cambiosDespues= cambios_despues
+        )
+
+        db.add(db_log)
+        db.commit()
+        db.refresh(db_log)
+
+        return PersonaPydantic.from_orm(db_persona)
+    else:
+        raise HTTPException(status_code=405)
 
 @app.get('/persona/{pk}')
 def read(pk: int, db: Session = Depends(get_db)):

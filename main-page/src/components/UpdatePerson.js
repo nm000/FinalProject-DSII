@@ -196,7 +196,7 @@ export const UpdatePerson = () => {
     // Envío del método PUT para realizar el UPDATE
     // Envío del método POST para realizar el CREATE con los datos
     console.log(selectedFile)
-    if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
+    if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria') {
       if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
@@ -285,20 +285,26 @@ export const UpdatePerson = () => {
                               if (!response.ok) {
                                 throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
                               }
-
-                              Swal.fire({
-                                title: "¡Bien hecho!",
-                                text: "¡Se ha actualizado exitosamente!",
-                                icon: "success"
-                              });
-
+                                Swal.fire({
+                                  title: "¡Bien hecho!",
+                                  text: "¡Se ha actualizado exitosamente!",
+                                  icon: "success"
+                                });
                             } catch (error) {
                               // Aquí manejas cualquier error que ocurra durante la solicitud
-                              Swal.fire({
-                                icon: "error",
-                                title: "Lo sentimos...",
-                                text: "Hubo un error del lado del servidor"
-                              });
+                              if (error.message.includes('405')) {
+                                Swal.fire({
+                                  title: "¿Y los cambios?",
+                                  text: "¡No ha realizado ningún cambio!",
+                                  icon: "question"
+                                });
+                              } else {
+                                Swal.fire({
+                                  icon: "error",
+                                  title: "Lo sentimos...",
+                                  text: "Hubo un error del lado del servidor"
+                                });
+                              }
                             }
                           };
                         } else {
@@ -476,7 +482,8 @@ export const UpdatePerson = () => {
             >
               <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
               <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-              <option value="Cedula">Cédula</option>
+              <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+              <option value="Cedula de extranjeria">Cédula de extranjería</option>
             </select>
           </label>
           <label>

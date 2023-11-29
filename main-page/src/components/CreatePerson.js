@@ -136,7 +136,7 @@ export const CreatePerson = () => {
     e.preventDefault();
 
     // Envío del método POST para realizar el CREATE con los datos
-    if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
+    if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria') {
       if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
         const numDocumento = parseInt(numDocumento_input)
         if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
@@ -369,7 +369,8 @@ export const CreatePerson = () => {
               >
                 <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
                 <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-                <option value="Cedula">Cédula</option>
+                <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+                <option value="Cedula de extranjeria">Cédula de extranjería</option>
               </select>
             </label>
             <label>

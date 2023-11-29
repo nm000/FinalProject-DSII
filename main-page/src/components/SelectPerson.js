@@ -152,7 +152,8 @@ export const SelectPerson = () => {
             >
               <option value="Seleccione el tipo de documento">Seleccione el tipo de documento</option>"
               <option value="Tarjeta de identidad">Tarjeta de identidad</option>
-              <option value="Cedula">Cédula</option>
+              <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+              <option value="Cedula de extranjeria">Cédula de extranjería</option>
             </select>
           </label>
           <label>
