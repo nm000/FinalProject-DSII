@@ -13,6 +13,7 @@ from datetime import datetime
 import json
 import base64
 import pytz
+import os
 
 app = FastAPI()
 
@@ -26,8 +27,10 @@ app.add_middleware(
 
 #SQL SERVER Configuration
 #SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://DESKTOP-61S4LKS\SQLEXPRESS/AppPersonas?driver=ODBC+driver+17+for+SQL+Server"
-
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://user:123456@db:3306/apppersonas"
+user = os.getenv("DB_USER")
+psw = os.getenv("DB_PW")
+name = os.getenv("DB_NAME")
+SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{user}:{psw}@db:3306/{name}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

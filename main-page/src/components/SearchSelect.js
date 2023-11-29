@@ -121,7 +121,7 @@ export const SearchPersonSelect = () => {
               min="0"
             />
           </label>
-          <Link to="/update" style={{ textDecoration: 'none' }}>
+          <Link to="/persona" style={{ textDecoration: 'none' }}>
             <input type="submit" value="Buscar" id="Buscar" onClick={submit} />
           </Link>
         </form>

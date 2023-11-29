@@ -193,6 +193,7 @@ export const LogConsole = () => {
                           <td>{log.accionLog}</td>
                         </tr>
                       ))}
+
                     </tbody>
                   </table>
                   <Modal
@@ -206,8 +207,7 @@ export const LogConsole = () => {
                       content: {
                         zIndex: 2, // Asegúrate de que el zIndex del contenido del modal sea mayor que el del formulario
                       },
-                    }}
-                  >
+                    }}>
                     {selectedLog && (
                       <div>
                         <h2>ID: {selectedLog.idLog}</h2>
@@ -220,12 +220,23 @@ export const LogConsole = () => {
                         <p>Cambios después: {selectedLog.cambiosDespues}</p>
                       </div>
                     )}
-                    <button onClick={closeModal}>Cerrar</button>
+                    <div className={Log.infochildslog}>
+                      <input type="submit" value="Cerrar" onClick={closeModal}></input>
+                    </div>
                   </Modal>
                 </div>
               ) : (
                 <p>Cargando datos...</p>
               )}
+
+{/*<h2>ID: {selectedLog.idLog}</h2>
+                        <p>Tipo de Documento: {selectedLog.tipoDocumentoPersona}</p>
+                        <p>Documento: {selectedLog.documentoPersona}</p>
+                        <p>Fecha: {selectedLog.dateLog}</p>
+                        <p>Acción: {selectedLog.accionLog}</p>
+                        <p>Valor: {selectedLog.valorLog}</p>
+                        <p>Cambios antes: {selectedLog.cambiosAntes}</p>
+              <p>Cambios después: {selectedLog.cambiosDespues}</p>*/}
 
             </section>
 
