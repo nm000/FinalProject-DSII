@@ -40,7 +40,7 @@ export const LogConsole = () => {
 
   // Acá solo se usa el num de documento
   // Esta página solo muestra un input para el documento, que se envía después a la página de update
-  const [numDoc, setnumDoc] = useState('');
+  const [numDocumento_input, setnumDocumento_input] = useState('');
   const [tipoDoc, setTipoDoc] = useState('');
   const [fecha, setfecha] = useState('');
 
@@ -60,11 +60,18 @@ export const LogConsole = () => {
     setModalIsOpen(false);
   };
 
+  function contieneSoloNumeros(cadena) {
+    // Utilizar una expresión regular para verificar si la cadena contiene solo números
+    return /^[0-9]+$/.test(cadena);
+  }
+
   const submit = async e => {
 
     e.preventDefault();
+    console.log(numDocumento_input, numDocumento_input === '' , contieneSoloNumeros(numDocumento_input))
     // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
-    console.log(numDoc, tipoDoc, fecha, !isNaN(numDoc))
+    if (numDocumento_input === '' || contieneSoloNumeros(numDocumento_input)) {
+      const numDoc = parseInt(numDocumento_input)
     if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula' || tipoDoc === '') {
       if ((typeof numDoc === "number" && numDoc.toString().length <= 10 && numDoc >= 0) || numDoc == '' || isNaN(numDoc)) {
         try {
@@ -77,7 +84,6 @@ export const LogConsole = () => {
 
             // colocar en personaData todos los datos de la persona
             setLogs(logData);
-            console.log(logData)
           } else {
             console.error('Error en la solicitud HTTP');
           }
@@ -98,6 +104,13 @@ export const LogConsole = () => {
         text: "Digite un tipo de documento válido"
       });
     }
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "No digite letras en el documento"
+    });
+  }
   }
 
   useEffect(() => {
@@ -136,10 +149,10 @@ export const LogConsole = () => {
               <label>
                 <i className='bx bxs-id-card'></i>
                 <input
-                  type="number"
+                  type="text"
                   id="numDocumento"
                   name="numDocumento" placeholder="Documento"
-                  onChange={(e) => setnumDoc(parseInt(e.target.value))}
+                  onChange={(e) => setnumDocumento_input(e.target.value)}
                 />
               </label>
             </form>

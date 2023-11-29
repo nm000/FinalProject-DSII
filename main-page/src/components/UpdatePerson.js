@@ -90,7 +90,7 @@ export const UpdatePerson = () => {
   const [fechaNacimiento, setFechaNacimiento] = useState('');
   const [genero, setGenero] = useState('');
   const [correoElectronico, setCorreoElectronico] = useState('');
-  const [celular, setCelular] = useState(0);
+  const [celular_input, setCelular_input] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFile2, setSelectedFile2] = useState(null);
   const [FotoDisplay, setFotoDisplay] = useState(null);
@@ -128,7 +128,7 @@ export const UpdatePerson = () => {
         setFechaNacimiento(personaData.fechaNacimiento);
         setGenero(personaData.genero);
         setCorreoElectronico(personaData.correoElectronico);
-        setCelular(personaData.celular);
+        setCelular_input(personaData.celular);
         setSelectedFile(personaData.foto);
         setFotoDisplay(personaData.foto);
 
@@ -183,6 +183,11 @@ export const UpdatePerson = () => {
     }
   }
 
+  function contieneSoloNumeros(cadena) {
+    // Utilizar una expresión regular para verificar si la cadena contiene solo números
+    return /^[0-9]+$/.test(cadena);
+  }
+
   async function submit(e) {
 
     // Esto va siempre
@@ -200,7 +205,9 @@ export const UpdatePerson = () => {
                 if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                   if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
                     if (validarCorreoElectronico(correoElectronico)) {
-                      if (typeof celular === "number" && celular.toString().length === 10 && !isNaN(celular) && celular >= 0) {
+                      if (celular_input !== '' && contieneSoloNumeros(celular_input)) {
+                        const celular = parseInt(celular_input)
+                        if (typeof celular === "number" && celular.toString().length === 10 && !isNaN(celular) && celular >= 0) {
                         if (selectedFile2 != null) {
                           const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
@@ -301,6 +308,13 @@ export const UpdatePerson = () => {
                           text: "Digite un número celular de 10 dígitos exactamente"
                         });
                       }
+                      } else {
+                        Swal.fire({
+                          icon: "error",
+                          title: "Oops...",
+                          text: "No digite letras en su celular ni lo deje vacío"
+                        });
+                      } 
                     } else {
                       Swal.fire({
                         icon: "error",
@@ -557,11 +571,11 @@ export const UpdatePerson = () => {
           <label >
             <i className='bx bx-phone'></i>
             <input
-              type="number"
+              type="text"
               id="celular"
               name="celular"
               placeholder="Num Celular"
-              onChange={(e) => setCelular(parseInt(e.target.value))}
+              onChange={(e) => setCelular_input(e.target.value)}
               defaultValue={personaData.celular}
             /></label>
 

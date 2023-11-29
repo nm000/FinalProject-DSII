@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 export const DeletePerson = () => {
 
-  const [numDocumento, setnumDocumento] = useState(0);
+  const [numDocumento_input, setnumDocumento_input] = useState('');
   const navigate = useNavigate();
   async function validateMicroservice(microservices) {
     try {
@@ -45,13 +45,20 @@ export const DeletePerson = () => {
     }
   }
 
+  function contieneSoloNumeros(cadena) {
+    // Utilizar una expresión regular para verificar si la cadena contiene solo números
+    return /^[0-9]+$/.test(cadena);
+  }
+
   const submit = async e => {
 
     // Esto va siempre
     e.preventDefault();
 
     // Se envía la solicitud DELETE al microservicio, enviando el num. de identificación mediante la URL
-    if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
+    if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
+      const numDocumento = parseInt(numDocumento_input)
+    if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento))  {
       try {
         const response = await fetch(`http://localhost:8001/persona/${numDocumento}`, {
           method: 'DELETE',
@@ -85,9 +92,16 @@ export const DeletePerson = () => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Digite un tipo de documento válido"
+        text: "Su documento debe tener 10 dígitos o menos, sin letras"
       });
     }
+  }else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "No digite letras en su documento ni lo deje vacío"
+    });
+  }
 
     // Esto lo único que hace es que retrocede uno a la página
     // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones
@@ -123,12 +137,11 @@ export const DeletePerson = () => {
           <label>
             <i className='bx bxs-id-card'></i>
             <input
-              type="number"
-              name="nroDocumento"
-              id="nroDocumento" placeholder="Número De Documento"
-              onChange={(e) => setnumDocumento(parseInt(e.target.value))}
-              min="0"
-            />
+                type="text"
+                id="nroDocumento"
+                name="nroDocumento" placeholder="Documento"
+                onChange={(e) => setnumDocumento_input(e.target.value)}
+              />
           </label>
           <input type="submit" value="Borrar" onClick={submit} />
         </form>

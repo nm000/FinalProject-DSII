@@ -77,14 +77,14 @@ export const CreatePerson = () => {
 
   // Inicializar todas las variables de la persona
   const [tipoDocumento, setTipoDocumento] = useState('');
-  const [numDocumento, setnumDocumento] = useState(0);
+  const [numDocumento_input, setnumDocumento_input] = useState('');
   const [primerNombre, setPrimerNombre] = useState('');
   const [segundoNombre, setSegundoNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [fechaNacimiento, setFechaNacimiento] = useState('');
   const [genero, setGenero] = useState('');
   const [correoElectronico, setCorreoElectronico] = useState('');
-  const [celular, setCelular] = useState(0);
+  const [celular_input, setCelular_input] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
   const navigate = useNavigate();
@@ -125,6 +125,11 @@ export const CreatePerson = () => {
     }
   }
 
+  function contieneSoloNumeros(cadena) {
+    // Utilizar una expresión regular para verificar si la cadena contiene solo números
+    return /^[0-9]+$/.test(cadena);
+  }
+
   async function submit(e) {
 
     // Siempre va
@@ -132,134 +137,151 @@ export const CreatePerson = () => {
 
     // Envío del método POST para realizar el CREATE con los datos
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
-      console.log(numDocumento)
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
-        if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
-          if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
-            if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
-              if (validarFormatoFecha(fechaNacimiento)) {
-                if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
-                  if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
-                    if (validarCorreoElectronico(correoElectronico)) {
-                      if (typeof celular === "number" && celular.toString().length === 10  && !isNaN(celular) && celular >= 0) {
-                        if (selectedFile != null) {
-                          const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
+      if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
+        const numDocumento = parseInt(numDocumento_input)
+        if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
+          if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
+            if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
+              if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
+                if (validarFormatoFecha(fechaNacimiento)) {
+                  if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
+                    if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
+                      if (validarCorreoElectronico(correoElectronico)) {
+                        if (celular_input !== '' && contieneSoloNumeros(celular_input)) {
+                          const celular = parseInt(celular_input)
+                          if (typeof celular === "number" && celular.toString().length === 10 && !isNaN(celular)) {
+                            if (selectedFile != null) {
+                              const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
-                          const reader = new FileReader();
-                          console.log(celular)
-                          reader.onload = async function () {
-                            try {
-                              const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
+                              const reader = new FileReader();
+                              reader.onload = async function () {
+                                try {
+                                  const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
 
-                              // Ahora puedes enviar base64String al backend junto con otros datos del formulario
-                              const response = await fetch('http://localhost:8002/', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  numDocumento,
-                                  tipoDocumento,
-                                  primerNombre,
-                                  segundoNombre,
-                                  apellidos,
-                                  fechaNacimiento,
-                                  genero,
-                                  correoElectronico,
-                                  celular,
-                                  foto
-                                }),
-                              });
+                                  // Ahora puedes enviar base64String al backend junto con otros datos del formulario
+                                  const response = await fetch('http://localhost:8002/', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                      numDocumento,
+                                      tipoDocumento,
+                                      primerNombre,
+                                      segundoNombre,
+                                      apellidos,
+                                      fechaNacimiento,
+                                      genero,
+                                      correoElectronico,
+                                      celular,
+                                      foto
+                                    }),
+                                  });
 
-                              // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
-                              if (!response.ok) {
-                                throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-                              }
-                              Swal.fire({
-                                title: "¡Bien hecho!",
-                                text: "¡Te has registrado exitosamente!",
-                                icon: "success"
-                              });
-                            } catch (error) {
-                              // Aquí manejas cualquier error que ocurra durante la solicitud
+                                  // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
+                                  if (!response.ok) {
+                                    throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                                  }
+                                  Swal.fire({
+                                    title: "¡Bien hecho!",
+                                    text: "¡Te has registrado exitosamente!",
+                                    icon: "success"
+                                  });
+                                } catch (error) {
+                                  // Aquí manejas cualquier error que ocurra durante la solicitud
+                                  Swal.fire({
+                                    icon: "error",
+                                    title: "Revisa el documento",
+                                    text: "La persona ya existe en la base de datos"
+                                  });
+                                }
+                              };
+
+                              // Lee el contenido de la imagen como base64
+                              reader.readAsDataURL(fileInput.files[0]);
+
+
+                            } else {
                               Swal.fire({
                                 icon: "error",
-                                title: "Lo sentimos...",
-                                text: "Hubo un error del lado del servidor"
+                                title: "Oops...",
+                                text: "Escoja una foto"
                               });
                             }
-                          };
-
-                          // Lee el contenido de la imagen como base64
-                          reader.readAsDataURL(fileInput.files[0]);
-
-
+                          } else {
+                            Swal.fire({
+                              icon: "error",
+                              title: "Oops...",
+                              text: "Digite un número celular de 10 dígitos exactamente"
+                            });
+                          }
                         } else {
                           Swal.fire({
                             icon: "error",
                             title: "Oops...",
-                            text: "Escoja una foto"
+                            text: "No digite letras en su celular ni lo deje vacío"
                           });
                         }
+
                       } else {
                         Swal.fire({
                           icon: "error",
                           title: "Oops...",
-                          text: "Digite un número celular de 10 dígitos exactamente"
+                          text: "Digite un correo válido"
                         });
                       }
                     } else {
                       Swal.fire({
                         icon: "error",
                         title: "Oops...",
-                        text: "Digite un correo válido"
+                        text: "Seleccione un género válido"
                       });
                     }
                   } else {
                     Swal.fire({
                       icon: "error",
                       title: "Oops...",
-                      text: "Seleccione un género válido"
+                      text: "Un menor de edad no puede tener cédula"
                     });
                   }
                 } else {
                   Swal.fire({
                     icon: "error",
                     title: "Oops...",
-                    text: "Un menor de edad no puede tener cédula"
+                    text: "Seleccione una fecha válida y dentro del rango permitido"
                   });
                 }
               } else {
                 Swal.fire({
                   icon: "error",
                   title: "Oops...",
-                  text: "Seleccione una fecha válida y dentro del rango permitido"
+                  text: "Sus apellidos deben tener 60 caracteres o menos, sin números"
                 });
               }
             } else {
               Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "Sus apellidos deben tener 60 caracteres o menos, sin números"
+                text: "Su segundo nombre debe tener 30 caracteres o menos, sin números"
               });
             }
           } else {
             Swal.fire({
               icon: "error",
               title: "Oops...",
-              text: "Su segundo nombre debe tener 30 caracteres o menos, sin números"
+              text: "Su nombre debe tener 30 caracteres o menos, sin números"
             });
           }
         } else {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Su nombre debe tener 30 caracteres o menos, sin números"
+            text: "Su documento debe tener 10 dígitos o menos, sin letras"
           });
         }
       } else {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+          text: "No digite letras en su documento ni lo deje vacío"
         });
       }
     } else {
@@ -353,12 +375,10 @@ export const CreatePerson = () => {
             <label>
               <i className='bx bxs-id-card'></i>
               <input
-                type="number"
+                type="text"
                 id="numDocumento"
                 name="numDocumento" placeholder="Documento"
-                onChange={(e) => setnumDocumento(parseInt(e.target.value))}
-                min="0"
-                step="1"
+                onChange={(e) => setnumDocumento_input(e.target.value)}
               />
             </label>
             <label>
@@ -414,7 +434,7 @@ export const CreatePerson = () => {
                 name="genero"
                 onChange={(e) => setGenero(e.target.value)}
               >
-                <option value="Seleccione su genero">Seleccione su genero</option>"
+                <option value="Seleccione su genero">Seleccione su género</option>"
                 <option value="Masculino">Masculino</option>
                 <option value="Femenino">Femenino</option>
                 <option value="No binario">No binario</option>
@@ -426,18 +446,18 @@ export const CreatePerson = () => {
               <input
                 type="email"
                 id="correoElectronico"
-                name="correoElectronico" placeholder="Correo Electronico"
+                name="correoElectronico" placeholder="Correo Electrónico"
                 onChange={(e) => setCorreoElectronico(e.target.value)}
               /></label>
 
             <label >
               <i className='bx bx-phone'></i>
               <input
-                type="number"
+                type="text"
                 id="celular"
                 name="celular"
                 placeholder="Num Celular"
-                onChange={(e) => setCelular(parseInt(e.target.value))}
+                onChange={(e) => setCelular_input(e.target.value)}
               /></label>
 
             <label >

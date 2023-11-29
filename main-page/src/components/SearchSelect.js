@@ -8,7 +8,7 @@ export const SearchPersonSelect = () => {
 
   // Acá solo se usa el num de documento
   // Esta página solo muestra un input para el documento, que se envía después a la página de update
-  const [numDocumento, setnumDocumento] = useState(0);
+  const [numDocumento_input, setnumDocumento_input] = useState('');
   const navigate = useNavigate();
 
   async function validateMicroservice(microservices) {
@@ -48,11 +48,18 @@ export const SearchPersonSelect = () => {
     }
   }
 
+  function contieneSoloNumeros(cadena) {
+    // Utilizar una expresión regular para verificar si la cadena contiene solo números
+    return /^[0-9]+$/.test(cadena);
+  }
+  
   const submit = async e => {
 
     e.preventDefault();
     // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
     // Redirecciona hacia la página update de la siguiente forma. Agrega el num de documento del formulario a la URL de la página
+    if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
+      const numDocumento = parseInt(numDocumento_input)
     if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
       try {
         const response = await fetch(`http://localhost:8000/persona/${numDocumento}`);
@@ -80,9 +87,16 @@ export const SearchPersonSelect = () => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Digite un tipo de documento válido"
+        text: "Su documento debe tener 10 dígitos o menos, sin letras"
       });
     }
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "No digite letras en su documento ni lo deje vacío"
+    });
+  }
   }
 
   // Solo un HTML para el input del num de documento
@@ -115,11 +129,11 @@ export const SearchPersonSelect = () => {
           <label>
             <i class='bx bxs-id-card'></i>
             <input
-              type="number"
-              placeholder="Documento"
-              onChange={(e) => setnumDocumento(parseInt(e.target.value))}
-              min="0"
-            />
+                type="text"
+                id="nroDocumento"
+                name="nroDocumento" placeholder="Documento"
+                onChange={(e) => setnumDocumento_input(e.target.value)}
+              />
           </label>
           <Link to="/persona" style={{ textDecoration: 'none' }}>
             <input type="submit" value="Buscar" id="Buscar" onClick={submit} />
