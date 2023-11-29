@@ -64,7 +64,11 @@ export const DeletePerson = () => {
         }
       
         // Si la respuesta es OK, el registro se eliminó correctamente
-        console.log('Registro eliminado correctamente');
+        Swal.fire({
+          title: "¡Bien hecho!",
+          text: "¡Registro eliminado correctamente!",
+          icon: "success"
+        });
       } catch (error) {
         // Manejar errores, mostrar mensaje de alerta si es un error 404
         if (error.message.includes('404')) {

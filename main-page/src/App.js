@@ -10,7 +10,7 @@ import {SelectPerson} from "./components/SelectPerson";
 
 import {LogConsole} from "./components/SelectLog";
 
-import './App.css';
+// import './App.css';
 
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 

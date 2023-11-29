@@ -132,6 +132,7 @@ export const CreatePerson = () => {
 
     // Envío del método POST para realizar el CREATE con los datos
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula') {
+      console.log(numDocumento)
       if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
         if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
           if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
@@ -357,6 +358,7 @@ export const CreatePerson = () => {
                 name="numDocumento" placeholder="Documento"
                 onChange={(e) => setnumDocumento(parseInt(e.target.value))}
                 min="0"
+                step="1"
               />
             </label>
             <label>
