@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy import create_engine
@@ -96,28 +96,30 @@ class CreateLog(Base):
     valorLog = Column(Text)
 
 @app.get('/persona/{pk}')
-def read(pk: int, db: Session = Depends(get_db)):
+def read(pk: int, validez: str = Query(...), db: Session = Depends(get_db)):
     # Intenta cargar la persona desde la base de datos
     persona = db.query(Persona).filter(Persona.numDocumento == pk).first()
 
     if persona is None:
         raise HTTPException(status_code=404, detail="La persona no se encontró")
-    
-    colombia_timezone = pytz.timezone('America/Bogota')
 
-    fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
-    db_log = CreateLog(
-        
-        dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
-        accionLog="BUSCAR",
-        documentoPersona= persona.numDocumento,
-        tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
-        valorLog=f"Se buscó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
-    )
+    if (validez == 'true'):   
+        colombia_timezone = pytz.timezone('America/Bogota')
 
-    db.add(db_log)
-    db.commit()
-    db.refresh(db_log)
+        fecha_act = datetime.now(colombia_timezone).strftime("%Y-%m-%d %H:%M:%S")
+
+        db_log = CreateLog(
+            
+            dateLog= fecha_act ,  # Puedes proporcionar la fecha que desees
+            accionLog="BUSCAR",
+            documentoPersona= persona.numDocumento,
+            tipoDocumentoPersona= persona.tipoDocumento,  # Proporciona el valor deseado
+            valorLog=f"Se buscó a la persona con id {persona.numDocumento} el {fecha_act}"  # Proporciona el valor deseado
+        )
+
+        db.add(db_log)
+        db.commit()
+        db.refresh(db_log)
 
     return persona.to_json()
 

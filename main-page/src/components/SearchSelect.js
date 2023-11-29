@@ -62,7 +62,7 @@ export const SearchPersonSelect = () => {
       const numDocumento = parseInt(numDocumento_input)
       if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
         try {
-          const response = await fetch(`http://localhost:8000/persona/${numDocumento}`);
+          const response = await fetch(`http://localhost:8000/persona/${numDocumento}?validez=true`);
 
           if (!response.ok) {
             // Si el código de estado no es OK, lanzar una excepción

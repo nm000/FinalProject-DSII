@@ -71,7 +71,7 @@ export const SelectPerson = () => {
     try {
 
       // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
-      const persona = await fetch(`http://localhost:8000/persona/${datos}`);
+      const persona = await fetch(`http://localhost:8000/persona/${datos}?validez=false`);
 
       if (persona.ok) {
         const personaData = await persona.json();
