@@ -208,14 +208,61 @@ export const UpdatePerson = () => {
                       if (celular_input !== '' && contieneSoloNumeros(celular_input)) {
                         const celular = parseInt(celular_input)
                         if (typeof celular === "number" && celular.toString().length === 10 && !isNaN(celular) && celular >= 0) {
-                        if (selectedFile2 != null) {
-                          const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
+                          if (selectedFile2 != null) {
+                            const fileInput = document.getElementById('foto');  // Reemplaza con tu método para obtener el input de tipo file
 
-                          const reader = new FileReader();
+                            const reader = new FileReader();
 
-                          reader.onload = async function () {
+                            reader.onload = async function () {
+                              try {
+                                const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
+
+                                // falta la foto
+                                const response = await fetch(`http://localhost:8003/${datos}`, {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    tipoDocumento,
+                                    primerNombre,
+                                    segundoNombre,
+                                    apellidos,
+                                    fechaNacimiento,
+                                    genero,
+                                    correoElectronico,
+                                    celular,
+                                    foto
+                                  }),
+                                });
+
+                                // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
+                                if (!response.ok) {
+                                  throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+                                }
+
+                                Swal.fire({
+                                  title: "¡Bien hecho!",
+                                  text: "¡Se ha actualizado exitosamente!",
+                                  icon: "success"
+                                });
+
+                              } catch (error) {
+                                // Aquí manejas cualquier error que ocurra durante la solicitud
+                                Swal.fire({
+                                  icon: "error",
+                                  title: "Lo sentimos...",
+                                  text: "Hubo un error del lado del servidor"
+                                });
+                              }
+                            }
+
+                            // Lee el contenido de la imagen como base64
+                            reader.readAsDataURL(fileInput.files[0]);
+                            // Esto lo único que hace es que retrocede uno a la página
+                            // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
+                          } else {
+                            // falta la foto
                             try {
-                              const foto = reader.result.split(',')[1];  // Obtiene la parte de datos en base64
+                              const foto = personaData.foto
 
                               // falta la foto
                               const response = await fetch(`http://localhost:8003/${datos}`, {
@@ -253,68 +300,21 @@ export const UpdatePerson = () => {
                                 text: "Hubo un error del lado del servidor"
                               });
                             }
-                          }
-
-                          // Lee el contenido de la imagen como base64
-                          reader.readAsDataURL(fileInput.files[0]);
-                          // Esto lo único que hace es que retrocede uno a la página
-                          // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones  
+                          };
                         } else {
-                          // falta la foto
-                          try {
-                            const foto = personaData.foto
-
-                            // falta la foto
-                            const response = await fetch(`http://localhost:8003/${datos}`, {
-                              method: 'PUT',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                tipoDocumento,
-                                primerNombre,
-                                segundoNombre,
-                                apellidos,
-                                fechaNacimiento,
-                                genero,
-                                correoElectronico,
-                                celular,
-                                foto
-                              }),
-                            });
-
-                            // Aquí puedes manejar la respuesta, por ejemplo, verificar el estado de la respuesta
-                            if (!response.ok) {
-                              throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
-                            }
-
-                            Swal.fire({
-                              title: "¡Bien hecho!",
-                              text: "¡Se ha actualizado exitosamente!",
-                              icon: "success"
-                            });
-
-                          } catch (error) {
-                            // Aquí manejas cualquier error que ocurra durante la solicitud
-                            Swal.fire({
-                              icon: "error",
-                              title: "Lo sentimos...",
-                              text: "Hubo un error del lado del servidor"
-                            });
-                          }
-                        };
-                      } else {
-                        Swal.fire({
-                          icon: "error",
-                          title: "Oops...",
-                          text: "Digite un número celular de 10 dígitos exactamente"
-                        });
-                      }
+                          Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Digite un número celular de 10 dígitos exactamente"
+                          });
+                        }
                       } else {
                         Swal.fire({
                           icon: "error",
                           title: "Oops...",
                           text: "No digite letras en su celular ni lo deje vacío"
                         });
-                      } 
+                      }
                     } else {
                       Swal.fire({
                         icon: "error",
@@ -438,15 +438,15 @@ export const UpdatePerson = () => {
   return <div className={mod.containerform}>
     <div className={mod.information}>
       <div className={mod.infochilds}>
-        <h2>Bienvenido</h2>
+        <h2 style={{ marginBottom: '30px' }}>Bienvenido</h2>
         <div>
           <img
             src={`data:image/png;base64,${FotoDisplay}`}
             alt="Foto de la persona"
-            style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '20%', objectFit: 'cover' }}
+            style={{ maxWidth: '300px', maxHeight: '400px', borderRadius: '20%', objectFit: 'cover' }}
           />
         </div>
-        <p>¿Quieres hacer algo más con tu información?</p>
+        <p style={{ marginTop: '20px' }}>¿Quieres hacer algo más con tu información?</p>
         <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >
           <input type="button" value="Añadir" />
         </Link>
@@ -457,7 +457,7 @@ export const UpdatePerson = () => {
     </div>
     <div className={mod.forminformation}>
       <div className={mod.forminformationchilds}>
-        <h2>Modificar Información</h2>
+        <h2 style={{ marginTop: '20px' }}>Modificar Información</h2>
         <div className={mod.icons}>
           <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <box-icon type='solid' name='a'></box-icon>

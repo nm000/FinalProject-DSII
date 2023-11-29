@@ -52,7 +52,7 @@ export const SearchPersonSelect = () => {
     // Utilizar una expresión regular para verificar si la cadena contiene solo números
     return /^[0-9]+$/.test(cadena);
   }
-  
+
   const submit = async e => {
 
     e.preventDefault();
@@ -60,43 +60,43 @@ export const SearchPersonSelect = () => {
     // Redirecciona hacia la página update de la siguiente forma. Agrega el num de documento del formulario a la URL de la página
     if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
       const numDocumento = parseInt(numDocumento_input)
-    if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
-      try {
-        const response = await fetch(`http://localhost:8000/persona/${numDocumento}`);
-      
-        if (!response.ok) {
-          // Si el código de estado no es OK, lanzar una excepción
-          throw new Error(`Error al eliminar el registro. Código de estado: ${response.status}`);
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
+        try {
+          const response = await fetch(`http://localhost:8000/persona/${numDocumento}`);
+
+          if (!response.ok) {
+            // Si el código de estado no es OK, lanzar una excepción
+            throw new Error(`Error al eliminar el registro. Código de estado: ${response.status}`);
+          }
+
+          // Si la respuesta es OK, el registro se eliminó correctamente
+          navigate(`/persona?datos=${numDocumento}`);
+        } catch (error) {
+          // Manejar errores, mostrar mensaje de alerta si es un error 404
+          if (error.message.includes('404')) {
+            Swal.fire({
+              title: "¿Documento errado?",
+              text: "No se encontró la persona",
+              icon: "question"
+            });
+          } else {
+            console.error('Error al eliminar el registro:', error.message);
+          }
         }
-      
-        // Si la respuesta es OK, el registro se eliminó correctamente
-        navigate(`/persona?datos=${numDocumento}`);
-      } catch (error) {
-        // Manejar errores, mostrar mensaje de alerta si es un error 404
-        if (error.message.includes('404')) {
-          Swal.fire({
-            title: "¿Documento errado?",
-            text: "No se encontró la persona",
-            icon: "question"
-          });
-        } else {
-          console.error('Error al eliminar el registro:', error.message);
-        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        });
       }
     } else {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        text: "No digite letras en su documento ni lo deje vacío"
       });
     }
-  } else {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "No digite letras en su documento ni lo deje vacío"
-    });
-  }
   }
 
   // Solo un HTML para el input del num de documento
@@ -115,7 +115,7 @@ export const SearchPersonSelect = () => {
     </div>
     <div className={Search.forminformation}>
       <div className={Search.forminformationchilds}>
-        <h2>Ingrese Documento para consultar</h2>
+        <h2 style={{ marginBottom: '30px' }}>Ingrese Documento para consultar</h2>
         <div className={Search.icons}>
           <a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >
             <box-icon type='solid' name='a'></box-icon>
@@ -129,11 +129,11 @@ export const SearchPersonSelect = () => {
           <label>
             <i class='bx bxs-id-card'></i>
             <input
-                type="text"
-                id="nroDocumento"
-                name="nroDocumento" placeholder="Documento"
-                onChange={(e) => setnumDocumento_input(e.target.value)}
-              />
+              type="text"
+              id="nroDocumento"
+              name="nroDocumento" placeholder="Documento"
+              onChange={(e) => setnumDocumento_input(e.target.value)}
+            />
           </label>
           <Link to="/persona" style={{ textDecoration: 'none' }}>
             <input type="submit" value="Buscar" id="Buscar" onClick={submit} />

@@ -35,8 +35,8 @@ body::before {
   display: flex;
   border-radius: 20px;
   box-shadow: 0 5px 7px rgba(0, 0, 0, .1);
-  height: 500px;
-  max-width: 900px;
+  height: 700px;
+  max-width: 1100px;
   transition: all 1s ease;
   margin: 10px;
 
@@ -66,7 +66,8 @@ body::before {
 }
 
 .infochilds p {
-  margin: 15px 0 ;
+  margin: 15px 0;
+  font-size: 20px;
   color: #555;
 }
 
@@ -76,6 +77,7 @@ body::before {
   border: solid 2px #9191bd;
   border-radius: 40px;
   padding: 10px 20px;
+  font-size: 16px;
   color: #9191bd;
   cursor: pointer;
   transition: background-color .3s ease;
@@ -95,7 +97,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   width: 60%;
   height: 100%;
   text-align: center;
@@ -111,11 +113,12 @@ body::before {
 
 .forminformationchilds h2 {
   color: #333;
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .forminformationchilds p {
   color: #555;
+  font-size: 18px;
 }
 
 .icons {
@@ -137,14 +140,18 @@ body::before {
   background-color: #c7c7f3;
   color: #fff;
 }
+
 .icons a {
   border: none;
   background: none;
   text-decoration: none;
-}.icons button {
+}
+
+.icons button {
   border: none;
   background: none;
 }
+
 .form {
   height: 100%;
   margin: 30px 0 0 0;
@@ -153,24 +160,29 @@ body::before {
 .form label {
   display: flex;
   align-items: center;
+  font-size: 24px;
   margin-bottom: 15px;
   border-radius: 20px;
   padding: 0 10px;
   background-color: #fff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
 }
+
 .form label select {
   width: 100%;
-padding: 10px;
-background-color: #fff;
-border: none;
-outline: none;
-border-radius: 20px;
-color: #333;
+  padding: 10px;
+  background-color: #fff;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  color: #333;
 }
+
 .form label input {
   width: 100%;
   padding: 10px;
+  font-size: 16px;
   background-color: #fff;
   border: none;
   outline: none;
@@ -186,6 +198,7 @@ color: #333;
   background-color: #9191bd;
   color: #fff;
   border-radius: 20px;
+  font-size: 20px;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
@@ -206,33 +219,33 @@ color: #333;
 
 @media screen and (max-width:750px) {
   html {
-font-size: 12px;
+    font-size: 12px;
   }
 }
 
 @media screen and (max-width:580px) {
   html {
-font-size: 10px;
+    font-size: 10px;
   }
 
   .containerform {
-height: 70vh;
-flex-direction: column;
+    height: 70vh;
+    flex-direction: column;
   }
 
   .information {
-width: 100%;
-padding: 20px;
-border-top-left-radius: 20px;
-border-top-right-radius: 20px;
-border-bottom-left-radius: 0px;
-border-bottom-right-radius: 0;
+    width: 100%;
+    padding: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0;
   }
 
   .forminformation {
-width: 100%;
-padding: 20px;
-border-bottom-left-radius: 20px;
-border-top-right-radius: 0;
+    width: 100%;
+    padding: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 0;
   }
 }

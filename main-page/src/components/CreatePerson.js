@@ -351,7 +351,7 @@ export const CreatePerson = () => {
       </div>
       <div className={Style.forminformation}>
         <div className={Style.forminformationchilds}>
-          <h2>Añadir Información</h2>
+          <h2 style={{ marginTop: '20px' }}>Añadir Información</h2>
           <div className={Style.icons}>
             <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])}>
               <box-icon type='solid' name='a'></box-icon>

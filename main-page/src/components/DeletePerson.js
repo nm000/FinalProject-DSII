@@ -58,50 +58,50 @@ export const DeletePerson = () => {
     // Se envía la solicitud DELETE al microservicio, enviando el num. de identificación mediante la URL
     if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
       const numDocumento = parseInt(numDocumento_input)
-    if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento))  {
-      try {
-        const response = await fetch(`http://localhost:8001/persona/${numDocumento}`, {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        });
-      
-        if (!response.ok) {
-          // Si el código de estado no es OK, lanzar una excepción
-          throw new Error(`Error al eliminar el registro. Código de estado: ${response.status}`);
-        }
-      
-        // Si la respuesta es OK, el registro se eliminó correctamente
-        Swal.fire({
-          title: "¡Bien hecho!",
-          text: "¡Registro eliminado correctamente!",
-          icon: "success"
-        });
-      } catch (error) {
-        // Manejar errores, mostrar mensaje de alerta si es un error 404
-        if (error.message.includes('404')) {
-          Swal.fire({
-            title: "¿Documento errado?",
-            text: "No se encontró la persona",
-            icon: "question"
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
+        try {
+          const response = await fetch(`http://localhost:8001/persona/${numDocumento}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
           });
-        } else {
-          console.error('Error al eliminar el registro:', error.message);
+
+          if (!response.ok) {
+            // Si el código de estado no es OK, lanzar una excepción
+            throw new Error(`Error al eliminar el registro. Código de estado: ${response.status}`);
+          }
+
+          // Si la respuesta es OK, el registro se eliminó correctamente
+          Swal.fire({
+            title: "¡Bien hecho!",
+            text: "¡Registro eliminado correctamente!",
+            icon: "success"
+          });
+        } catch (error) {
+          // Manejar errores, mostrar mensaje de alerta si es un error 404
+          if (error.message.includes('404')) {
+            Swal.fire({
+              title: "¿Documento errado?",
+              text: "No se encontró la persona",
+              icon: "question"
+            });
+          } else {
+            console.error('Error al eliminar el registro:', error.message);
+          }
         }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        });
       }
     } else {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Su documento debe tener 10 dígitos o menos, sin letras"
+        text: "No digite letras en su documento ni lo deje vacío"
       });
     }
-  }else {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "No digite letras en su documento ni lo deje vacío"
-    });
-  }
 
     // Esto lo único que hace es que retrocede uno a la página
     // Por ejemplo cuando el create se hace correctamente, te devuelve a la página del menú de opciones
@@ -123,7 +123,7 @@ export const DeletePerson = () => {
     </div>
     <div className={del.forminformation}>
       <div className={del.forminformationchilds}>
-        <h2>Borrar datos</h2>
+        <h2 style={{ marginBottom: '30px' }}>Borrar datos</h2>
         <div className={del.icons}>
           <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <box-icon type='solid' name='a'></box-icon>
@@ -137,11 +137,11 @@ export const DeletePerson = () => {
           <label>
             <i className='bx bxs-id-card'></i>
             <input
-                type="text"
-                id="nroDocumento"
-                name="nroDocumento" placeholder="Documento"
-                onChange={(e) => setnumDocumento_input(e.target.value)}
-              />
+              type="text"
+              id="nroDocumento"
+              name="nroDocumento" placeholder="Documento"
+              onChange={(e) => setnumDocumento_input(e.target.value)}
+            />
           </label>
           <input type="submit" value="Borrar" onClick={submit} />
         </form>

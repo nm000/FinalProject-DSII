@@ -68,49 +68,49 @@ export const LogConsole = () => {
   const submit = async e => {
 
     e.preventDefault();
-    console.log(numDocumento_input, numDocumento_input === '' , contieneSoloNumeros(numDocumento_input))
+    console.log(numDocumento_input, numDocumento_input === '', contieneSoloNumeros(numDocumento_input))
     // Luego, puedes navegar a la nueva página y pasar los datos a través de la barra de direcciones de URL
     if (numDocumento_input === '' || contieneSoloNumeros(numDocumento_input)) {
       const numDoc = parseInt(numDocumento_input)
-    if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula' || tipoDoc === '') {
-      if ((typeof numDoc === "number" && numDoc.toString().length <= 10 && numDoc >= 0) || numDoc == '' || isNaN(numDoc)) {
-        try {
-          // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
+      if (tipoDoc === 'Tarjeta de identidad' || tipoDoc === 'Cedula' || tipoDoc === '') {
+        if ((typeof numDoc === "number" && numDoc.toString().length <= 10 && numDoc >= 0) || numDoc == '' || isNaN(numDoc)) {
+          try {
+            // SOLICITUD GET PARA LEER UNA PERSONA Y SUS DATOS
 
-          const response = await fetch(`http://localhost:8004/log?tipoDoc=${tipoDoc}&numDoc=${numDoc}&fecha=${fecha}`);
+            const response = await fetch(`http://localhost:8004/log?tipoDoc=${tipoDoc}&numDoc=${numDoc}&fecha=${fecha}`);
 
-          if (response.ok) {
-            const logData = await response.json();
+            if (response.ok) {
+              const logData = await response.json();
 
-            // colocar en personaData todos los datos de la persona
-            setLogs(logData);
-          } else {
-            console.error('Error en la solicitud HTTP');
+              // colocar en personaData todos los datos de la persona
+              setLogs(logData);
+            } else {
+              console.error('Error en la solicitud HTTP');
+            }
+          } catch (error) {
+            console.error('Ocurrió un error:', error);
           }
-        } catch (error) {
-          console.error('Ocurrió un error:', error);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Su documento debe tener 10 dígitos o menos, sin letras"
+          });
         }
       } else {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Su documento debe tener 10 dígitos o menos, sin letras"
+          text: "Digite un tipo de documento válido"
         });
       }
     } else {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Digite un tipo de documento válido"
+        text: "No digite letras en el documento"
       });
     }
-  } else {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "No digite letras en el documento"
-    });
-  }
   }
 
   useEffect(() => {
@@ -131,7 +131,7 @@ export const LogConsole = () => {
         <div className={Log.forminformationlog}>
           <div className={Log.forminformationchildslog}>
             <form className={Log.formlog}>
-              <h2>Tipo De Documento</h2>
+              <h2 style={{ marginBottom: '20px', marginTop: '10px' }}>Tipo De Documento</h2>
               <label >
                 <i className='bx bxs-user-account'></i>
                 <select
@@ -145,7 +145,7 @@ export const LogConsole = () => {
               <input type="submit" onClick={submit} value="Buscar" />
             </form>
             <form className={Log.formlog}>
-              <h2>Documento</h2>
+              <h2 style={{ marginBottom: '20px', marginTop: '10px' }}>Documento</h2>
               <label>
                 <i className='bx bxs-id-card'></i>
                 <input
@@ -157,7 +157,7 @@ export const LogConsole = () => {
               </label>
             </form>
             <form className={Log.formlog}>
-              <h2>Fecha Registro</h2>
+              <h2 style={{ marginBottom: '20px', marginTop: '10px' }}>Fecha Registro</h2>
               <label >
                 <input
                   type="date"
@@ -239,10 +239,10 @@ export const LogConsole = () => {
                   </Modal>
                 </div>
               ) : (
-                <p>Cargando datos...</p>
+                <p>No hay datos coincidentes</p>
               )}
 
-{/*<h2>ID: {selectedLog.idLog}</h2>
+              {/*<h2>ID: {selectedLog.idLog}</h2>
                         <p>Tipo de Documento: {selectedLog.tipoDocumentoPersona}</p>
                         <p>Documento: {selectedLog.documentoPersona}</p>
                         <p>Fecha: {selectedLog.dateLog}</p>

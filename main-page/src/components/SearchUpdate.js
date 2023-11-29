@@ -61,7 +61,7 @@ export const SearchPerson = () => {
     // Redirecciona hacia la página update de la siguiente forma. Agrega el num de documento del formulario a la URL de la página
     if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
       const numDocumento = parseInt(numDocumento_input)
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento >= 0) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
         try {
           const response = await fetch(`http://localhost:8003/persona/${numDocumento}`);
 
@@ -117,7 +117,7 @@ export const SearchPerson = () => {
     </div>
     <div className={Search.forminformation}>
       <div className={Search.forminformationchilds}>
-        <h2>Ingrese Documento para modificar</h2>
+        <h2 style={{ marginBottom: '30px' }}>Ingrese Documento para modificar</h2>
         <div className={Search.icons}>
           <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
             <box-icon type='solid' name='a'></box-icon>

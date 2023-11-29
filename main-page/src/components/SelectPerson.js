@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 
 export const SelectPerson = () => {
 
-    // Inicializar todas las variables de la persona
+  // Inicializar todas las variables de la persona
   const [tipoDocumento, setTipoDocumento] = useState('');
   const [numDocumento, setnumDocumento] = useState(0);
   const [primerNombre, setPrimerNombre] = useState('');
@@ -109,16 +109,16 @@ export const SelectPerson = () => {
     return `${anio}-${mes}-${dia}`;
   };
 
-    // Solo un HTML para el input del num de documento
-    return <div className={mod.containerform}>
+  // Solo un HTML para el input del num de documento
+  return <div className={mod.containerform}>
     <div className={mod.information}>
       <div className={mod.infochilds}>
-        <h2>Bienvenido(a), {personaData.primerNombre}</h2>
+        <h2 style={{ marginBottom: '30px' }}>Bienvenido(a), {personaData.primerNombre}</h2>
         <div>
           <img
             src={`data:image/png;base64,${personaData.foto}`}
             alt="Foto de la persona"
-            style={{ maxWidth: '300px', maxHeight: '200px', borderRadius: '20%',  objectFit: 'cover'   }}
+            style={{ maxWidth: '300px', maxHeight: '400px', borderRadius: '20%', objectFit: 'cover' }}
           />
         </div>
         <p>¿Quieres hacer algo más?</p>
@@ -132,7 +132,7 @@ export const SelectPerson = () => {
     </div>
     <div className={mod.forminformation}>
       <div className={mod.forminformationchilds}>
-        <h2>Consultar Información</h2>
+        <h2 style={{ marginTop: '20px' }}>Consultar Información</h2>
         <div className={mod.icons}>
           <a href="/select">
             <box-icon type='solid' name='a'></box-icon>
@@ -203,7 +203,7 @@ export const SelectPerson = () => {
               id="fechaNacimiento"
               name="fechaNacimiento" placeholder="Fecha Nacimiento"
               pattern="\d{2}-\d{2}-\d{4}"
-              
+
               max={(new Date()).toISOString().split('T')[0]}
               min="1900-01-01"
               readOnly
