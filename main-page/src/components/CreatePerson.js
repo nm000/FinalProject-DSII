@@ -56,7 +56,7 @@ function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
 
   // Calcular la edad
   const hoy = new Date();
-  const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
+  var edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
   const mesActual = hoy.getMonth();
   const diaActual = hoy.getDate();
 
@@ -66,7 +66,7 @@ function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
   }
 
   // Verificar la edad y el tipo de documento
-  if (edad < 18 && tipoDocumento === 'Cedula') {
+  if (edad < 18 && (tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria')) {
     return false;
   } else {
     return true;
@@ -140,9 +140,9 @@ export const CreatePerson = () => {
       if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
         const numDocumento = parseInt(numDocumento_input)
         if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
-          if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
-            if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
-              if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
+          if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g,"").length <= 30) {
+            if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g,"").length <= 30) {
+              if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g,"").length <= 60) {
                 if (validarFormatoFecha(fechaNacimiento)) {
                   if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                     if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {

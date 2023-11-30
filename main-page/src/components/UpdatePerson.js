@@ -56,7 +56,7 @@ function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
 
   // Calcular la edad
   const hoy = new Date();
-  const edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
+  var edad = hoy.getFullYear() - fechaNacimientoObj.getFullYear();
   const mesActual = hoy.getMonth();
   const diaActual = hoy.getDate();
 
@@ -66,7 +66,7 @@ function verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento) {
   }
 
   // Verificar la edad y el tipo de documento
-  if (edad < 18 && tipoDocumento === 'Cedula') {
+  if (edad < 18 && (tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria')) {
     return false;
   } else {
     return true;
@@ -195,12 +195,12 @@ export const UpdatePerson = () => {
 
     // Envío del método PUT para realizar el UPDATE
     // Envío del método POST para realizar el CREATE con los datos
-    console.log(selectedFile)
+    
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria') {
-      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento) && numDocumento > 0) {
-        if (validarStringSinNumeros(primerNombre) && primerNombre.length <= 30) {
-          if (validarStringSinNumeros(segundoNombre) && segundoNombre.length <= 30) {
-            if (validarStringSinNumeros(apellidos) && apellidos.length <= 60) {
+      if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
+        if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g,"").length <= 30) {
+          if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g,"").length <= 30) {
+            if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g,"").length <= 60) {
               if (validarFormatoFecha(fechaNacimiento)) {
                 if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                   if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
@@ -247,11 +247,19 @@ export const UpdatePerson = () => {
 
                               } catch (error) {
                                 // Aquí manejas cualquier error que ocurra durante la solicitud
-                                Swal.fire({
-                                  icon: "error",
-                                  title: "Lo sentimos...",
-                                  text: "Hubo un error del lado del servidor"
-                                });
+                                if (error.message.includes('405')) {
+                                  Swal.fire({
+                                    title: "¿Y los cambios?",
+                                    text: "¡No ha realizado ningún cambio!",
+                                    icon: "question"
+                                  });
+                                } else {
+                                  Swal.fire({
+                                    icon: "error",
+                                    title: "Lo sentimos...",
+                                    text: "Hubo un error del lado del servidor"
+                                  });
+                                }
                               }
                             }
 
