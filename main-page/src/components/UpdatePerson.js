@@ -461,10 +461,10 @@ export const UpdatePerson = () => {
           />
         </div>
         <p style={{ marginTop: '20px' }}>¿Quieres hacer algo más con tu información?</p>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002', '8004'] }])} >
           <input type="button" value="Añadir" />
         </Link>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001', '8004'] }])} >
           <input type="button" value="Borrar" />
         </Link>
         <Link style={{ textDecoration: 'none' }} to="/" >
@@ -476,10 +476,10 @@ export const UpdatePerson = () => {
       <div className={mod.forminformationchilds}>
         <h2 style={{ marginTop: '20px' }}>Modificar Información</h2>
         <div className={mod.icons}>
-          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000', '8004'] }])} >
             <box-icon type='solid' name='a'></box-icon>
           </a>
-          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000', '8004'] }])} >
             <i className='bx bx-search'></i>
           </a>
         </div>

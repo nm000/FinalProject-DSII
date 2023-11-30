@@ -54,9 +54,9 @@ export const Prin = () => {
                     <a href="/">MyInfoVault</a>
                 </div>
                 <ul>
-                    <li><a onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >Crear</a></li>
-                    <li><a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >Modificar</a></li>
-                    <li><a onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >Borrar</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002', '8004'] }])} >Crear</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003', '8004'] }])} >Modificar</a></li>
+                    <li><a onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001', '8004'] }])} >Borrar</a></li>
                 </ul>
             </div>
         </nav>
@@ -64,7 +64,7 @@ export const Prin = () => {
         <div className={NavSty.center}>
             <div className={NavSty.sub_title}>Gestión de información sin esfuerzo</div>
             <div className={NavSty.btns}>
-              <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
+              <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000', '8004'] }])} >
                 <button>Ver Información</button>
                 </a>
                 <a onClick={() => validateMicroservice([{ endpoint: 'log', ports: ['8004'] }])} >

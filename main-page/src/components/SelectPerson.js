@@ -122,10 +122,10 @@ export const SelectPerson = () => {
           />
         </div>
         <p>¿Quieres hacer algo más?</p>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002', '8004'] }])}>
           <input type="button" value="Añadir" />
         </Link>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])}>
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001', '8004'] }])}>
           <input type="button" value="Borrar" />
         </Link>
         <Link style={{ textDecoration: 'none' }} to="/" >
@@ -140,7 +140,7 @@ export const SelectPerson = () => {
           <a href="/select">
             <box-icon type='solid' name='a'></box-icon>
           </a>
-          <a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])}>
+          <a onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003', '8004'] }])}>
             <i className='bx bx-edit'></i>
           </a>
         </div>

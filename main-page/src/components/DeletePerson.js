@@ -113,10 +113,10 @@ export const DeletePerson = () => {
       <div className={del.infochilds}>
         <h2>Bienvenido</h2>
         <p>¿Quieres hacer algo más con tu información?</p>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002'] }])} >
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'create', ports: ['8002', '8004'] }])} >
           <input type="button" value="Añadir" />
         </Link>
-        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >
+        <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003', '8004'] }])} >
           <input type="button" value="Modificar" />
         </Link>
         <Link style={{ textDecoration: 'none' }} to="/" >
@@ -128,10 +128,10 @@ export const DeletePerson = () => {
       <div className={del.forminformationchilds}>
         <h2 style={{ marginBottom: '30px' }}>Borrar datos</h2>
         <div className={del.icons}>
-          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000', '8004'] }])} >
             <box-icon type='solid' name='a'></box-icon>
           </a>
-          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000'] }])} >
+          <a onClick={() => validateMicroservice([{ endpoint: 'searchperson', ports: ['8000', '8004'] }])} >
             <i className='bx bx-search'></i>
           </a>
         </div>
