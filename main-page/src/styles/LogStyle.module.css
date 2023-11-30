@@ -35,6 +35,20 @@ body::before {
   opacity: 1;
 }
 
+#vertical-table{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: auto; /* Esto centrará la tabla horizontal y verticalmente */
+  max-width: 600px; /* Opcional: ajusta el ancho máximo de la tabla según tus necesidades */
+}
+
+.column-vertical {
+  flex: 1;
+  border: 1px solid #be1f1f;
+  padding: 10px;
+}
+
 .containerformlog {
   display: flex;
   flex-direction: column;
@@ -459,3 +473,4 @@ td {
     text-align: center;
   }
 }
+
