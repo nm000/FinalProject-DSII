@@ -1,2 +1,0 @@
-sqlalchemy==1.4.23
-pymssql==2.1.5

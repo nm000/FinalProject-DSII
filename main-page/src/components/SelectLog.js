@@ -65,6 +65,8 @@ export const LogConsole = () => {
     return /^[0-9]+$/.test(cadena);
   }
 
+
+  
   const submit = async e => {
 
     e.preventDefault();
@@ -216,22 +218,64 @@ export const LogConsole = () => {
                     contentLabel="Example Modal"
                     style={{
                       overlay: {
-                        zIndex: 2, // Asegúrate de que el zIndex del overlay sea mayor que el del formulario
+                        zIndex: 2,
+                        position: 'fixed',
+                        display: 'flex',
+                        justifyContent: 'center', // Center the modal horizontally
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
                       },
                       content: {
-                        zIndex: 2, // Asegúrate de que el zIndex del contenido del modal sea mayor que el del formulario
+                        zIndex: 1,
+                        margin: '0',
+                        padding: '20px',
+                        width: 'auto',
+                        maxWidth: '40%',
+                        maxHeight: '80%',
+                        overflow: 'auto',
+                        marginLeft: 'auto', 
+                        marginRight: 'auto', 
+                        backgroundColor: '#F0F0F0'
                       },
                     }}>
                     {selectedLog && (
-                      <div>
-                        <h2>ID: {selectedLog.idLog}</h2>
-                        <p>Tipo de Documento: {selectedLog.tipoDocumentoPersona}</p>
-                        <p>Documento: {selectedLog.documentoPersona}</p>
-                        <p>Fecha: {selectedLog.dateLog}</p>
-                        <p>Acción: {selectedLog.accionLog}</p>
-                        <p>Valor: {selectedLog.valorLog}</p>
-                        <p>Información antes: {selectedLog.cambiosAntes}</p>
-                        <p>Información después: {selectedLog.cambiosDespues}</p>
+                      <div style={{ display: 'flex', padding:'0', flexDirection: 'column', textAlign: 'center', margin: 'auto', marginTop: '10px', width: 'auto', maxWidth: '500px'}}>
+                        <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px'}}>
+                          <h2 style={{ padding: '10px '}}> ID </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.idLog}</p>
+                        </div>
+                        <div  style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                          <h2 style={{ padding: '10px '}}>Tipo de Documento </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.tipoDocumentoPersona}</p>
+                        </div>
+                        <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                          <h2 style={{ padding: '10px '}}>Documento </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.documentoPersona}</p>
+                        </div>
+                        <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                          <h2 style={{ padding: '10px '}}>Fecha </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.dateLog}</p>
+                        </div>
+                        <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                          <h2 style={{ padding: '10px '}}>Acción realizada </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.accionLog}</p>
+                        </div>
+                        <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                          <h2 style={{ padding: '10px '}}>Valor del Log </h2>
+                          <p style={{ fontSize: '20px' }}>{selectedLog.valorLog}</p>
+                        </div>
+                        {selectedLog.cambiosAntes && (
+                          <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                            <h2 style={{ padding: '10px '}}>Información antes </h2>
+                            <p style={{ fontSize: '20px' }}>{selectedLog.cambiosAntes}</p>
+                          </div>
+                        )}
+                        {selectedLog.cambiosDespues && (
+                          <div style={{ flex: 1, border: '1px solid #ddd', padding: '10px' }}>
+                            <h2 style={{ padding: '10px '}}>Información después </h2>
+                            <p style={{ fontSize: '20px' }}>{selectedLog.cambiosDespues}</p>
+                          </div>  
+                        )}
                       </div>
                     )}
                     <div className={Log.infochildslog}>

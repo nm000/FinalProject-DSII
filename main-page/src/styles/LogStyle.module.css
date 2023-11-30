@@ -35,6 +35,20 @@ body::before {
   opacity: 1;
 }
 
+#vertical-table{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: auto; /* Esto centrará la tabla horizontal y verticalmente */
+  max-width: 600px; /* Opcional: ajusta el ancho máximo de la tabla según tus necesidades */
+}
+
+.column-vertical {
+  flex: 1;
+  border: 1px solid #be1f1f;
+  padding: 10px;
+}
+
 .containerformlog {
   display: flex;
   flex-direction: column;
@@ -108,7 +122,7 @@ body::before {
   overflow: hidden;
   display: flex;
   align-items: top;
-  justify-content: top;
+  justify-content: flex-start;
   flex-wrap: wrap;
   height: 100%;
   text-align: left;
@@ -267,52 +281,7 @@ body::before {
   transform: translateY(-300%);
 }
 
-.ModalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.ModalContent {
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.ModalHeader {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.ModalText {
-  margin-bottom: 10px;
-}
-
-.ModalButton {
-  background-color: #9bef9e;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.ModalButton:hover {
-  background-color: #61a963;
-}
 
 @media screen and (max-width:750px) {
   html {
@@ -459,3 +428,4 @@ td {
     text-align: center;
   }
 }
+
