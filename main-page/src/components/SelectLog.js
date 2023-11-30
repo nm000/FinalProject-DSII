@@ -219,20 +219,23 @@ export const LogConsole = () => {
                     style={{
                       overlay: {
                         zIndex: 2,
-                        position: 'absolute',
+                        position: 'fixed',
                         display: 'flex',
-                        justifyContent: 'center',
+                        justifyContent: 'center', // Center the modal horizontally
                         alignItems: 'center',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)' // Asegúrate de que el zIndex del overlay sea mayor que el del formulario
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
                       },
                       content: {
-                        zIndex: 1, 
+                        zIndex: 1,
                         margin: '0',
                         padding: '20px',
                         width: 'auto',
-                        maxWidth: '40%',  // Ajusta el maxWidth según sea necesario
+                        maxWidth: '40%',
                         maxHeight: '80%',
-                        overflow: 'auto',// Asegúrate de que el zIndex del contenido del modal sea mayor que el del formulario
+                        overflow: 'auto',
+                        marginLeft: 'auto', 
+                        marginRight: 'auto', 
+                        backgroundColor: '#F0F0F0'
                       },
                     }}>
                     {selectedLog && (
