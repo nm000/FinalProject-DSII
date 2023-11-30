@@ -119,6 +119,9 @@ export const DeletePerson = () => {
         <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'search', ports: ['8003'] }])} >
           <input type="button" value="Modificar" />
         </Link>
+        <Link style={{ textDecoration: 'none' }} to="/" >
+          <input type="button" value="Inicio" />
+        </Link>
       </div>
     </div>
     <div className={del.forminformation}>

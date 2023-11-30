@@ -111,6 +111,9 @@ export const SearchPersonSelect = () => {
         <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
           <input type="button" value="Borrar" />
         </Link>
+        <Link style={{ textDecoration: 'none' }} to="/" >
+          <input type="button" value="Inicio" />
+        </Link>
       </div>
     </div>
     <div className={Search.forminformation}>

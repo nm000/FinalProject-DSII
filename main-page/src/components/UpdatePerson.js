@@ -195,12 +195,12 @@ export const UpdatePerson = () => {
 
     // Envío del método PUT para realizar el UPDATE
     // Envío del método POST para realizar el CREATE con los datos
-    
+
     if (tipoDocumento === 'Tarjeta de identidad' || tipoDocumento === 'Cedula de ciudadania' || tipoDocumento === 'Cedula de extranjeria') {
       if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
-        if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g,"").length <= 30) {
-          if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g,"").length <= 30) {
-            if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g,"").length <= 60) {
+        if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g, "").length <= 30) {
+          if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g, "").length <= 30) {
+            if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g, "").length <= 60) {
               if (validarFormatoFecha(fechaNacimiento)) {
                 if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                   if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
@@ -293,11 +293,11 @@ export const UpdatePerson = () => {
                               if (!response.ok) {
                                 throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
                               }
-                                Swal.fire({
-                                  title: "¡Bien hecho!",
-                                  text: "¡Se ha actualizado exitosamente!",
-                                  icon: "success"
-                                });
+                              Swal.fire({
+                                title: "¡Bien hecho!",
+                                text: "¡Se ha actualizado exitosamente!",
+                                icon: "success"
+                              });
                             } catch (error) {
                               // Aquí manejas cualquier error que ocurra durante la solicitud
                               if (error.message.includes('405')) {
@@ -466,6 +466,9 @@ export const UpdatePerson = () => {
         </Link>
         <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
           <input type="button" value="Borrar" />
+        </Link>
+        <Link style={{ textDecoration: 'none' }} to="/" >
+          <input type="button" value="Inicio" />
         </Link>
       </div>
     </div>

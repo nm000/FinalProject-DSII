@@ -140,9 +140,9 @@ export const CreatePerson = () => {
       if (numDocumento_input !== '' && contieneSoloNumeros(numDocumento_input)) {
         const numDocumento = parseInt(numDocumento_input)
         if (typeof numDocumento === "number" && numDocumento.toString().length <= 10 && !isNaN(numDocumento)) {
-          if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g,"").length <= 30) {
-            if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g,"").length <= 30) {
-              if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g,"").length <= 60) {
+          if (validarStringSinNumeros(primerNombre) && primerNombre.replace(/\s/g, "").length <= 30) {
+            if (validarStringSinNumeros(segundoNombre) && segundoNombre.replace(/\s/g, "").length <= 30) {
+              if (validarStringSinNumeros(apellidos) && apellidos.replace(/\s/g, "").length <= 60) {
                 if (validarFormatoFecha(fechaNacimiento)) {
                   if (verificarTipoDocumentoYEdad(fechaNacimiento, tipoDocumento)) {
                     if (genero === 'Masculino' || genero === 'Femenino' || genero === 'No binario' || genero === 'Prefiero no responder') {
@@ -346,6 +346,9 @@ export const CreatePerson = () => {
           </Link>
           <Link style={{ textDecoration: 'none' }} onClick={() => validateMicroservice([{ endpoint: 'delete', ports: ['8001'] }])} >
             <input type="button" value="Borrar" />
+          </Link>
+          <Link style={{ textDecoration: 'none' }} to="/" >
+            <input type="button" value="Inicio" />
           </Link>
         </div>
       </div>
